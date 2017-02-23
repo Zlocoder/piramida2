@@ -10,5 +10,12 @@ return [
     'controllerNamespace' => 'app\commands',
     'components' => [
         'db' => require(__DIR__ . '/db.php'),
+    ],
+    'controllerMap' => [
+        'migrate' => [
+            'class' => 'yii\console\controllers\MigrateController',
+            'migrationTable' => '_migration',
+            'interactive' => false
+        ]
     ]
 ];
