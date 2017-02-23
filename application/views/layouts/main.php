@@ -27,23 +27,25 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
 
     <div class="wrap">
-        <?php
-            NavBar::begin([
+        <?php NavBar::begin([
                 'brandLabel' => 'My Company',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
-            ]);
+        ]); ?>
 
-            echo Nav::widget([
+            <?= Nav::widget([
+                'options' => ['class' => 'navbar-nav'],
+                'items' => $this->params['mainNav']
+            ]) ?>
+
+            <?= Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                ],
-            ]);
+                'items' => $this->params['userNav']
+            ]); ?>
 
-            NavBar::end();
-        ?>
+        <?php NavBar::end(); ?>
 
         <div class="container">
             <?= Breadcrumbs::widget([
