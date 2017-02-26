@@ -3,7 +3,8 @@
 return [
     'db' => require(__DIR__ . '/db.php'),
     'user' => [
-        'identityClass' => false,
+        'class' => 'app\components\User',
+        'identityClass' => 'app\models\User',
         'enableAutoLogin' => true
     ],
     'mailer' => [

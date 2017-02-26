@@ -13,6 +13,13 @@ class Controller extends \yii\web\Controller {
         ];
 
         $this->view->params['userNav'] = [];
+        if (\Yii::$app->user->isGuest) {
+            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'SignIn'), 'url' => Url::to(['site/login'])];
+            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'Registration'), 'url' => Url::to(['account/registration'])];
+        } else {
+            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'My cabinet'), 'url' => Url::to(['account/index'])];
+            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'SignOut') . ' (' . \Yii::$app->user->fullname . ')', 'url' => Url::to(['site/logout'])];
+        }
     }
 
     public function beforeAction($action) {
