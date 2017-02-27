@@ -50,6 +50,11 @@ class User extends ActiveRecord implements IdentityInterface {
         ];
     }
 
+    // Invite Relations
+    public function getInvite() {
+        return $this->hasOne(Invite::className(), ['userId' => 'id']);
+    }
+
     // Custom fields
     public function getFullname() {
         if ($this->firstname == $this->lastname) {
