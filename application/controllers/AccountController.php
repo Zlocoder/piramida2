@@ -20,7 +20,7 @@ class AccountController extends \app\base\Controller {
 
             try {
                 if ($registrationForm->run()) {
-                    return \Yii::$app->user->login($registrationForm->user) ? $this->redirect(['account/index']) : $this->goHome();
+                    return \Yii::$app->user->login($registrationForm->user) ? $this->goAccount() : $this->goHome();
                 }
             } catch (Exception $e) {
                 \Yii::$app->session->setFlash('error', $e->getMessage());
