@@ -55,6 +55,11 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(Invite::className(), ['userId' => 'id']);
     }
 
+    // Tree relations
+    public function getPosition() {
+        return $this->hasOne(Position::className(), ['userId' => 'id']);
+    }
+
     // Custom fields
     public function getFullname() {
         if ($this->firstname == $this->lastname) {
