@@ -13,6 +13,8 @@ class AccountController extends \app\base\Controller {
 
     public function actionRegistration() {
         $registrationForm = new RegistrationForm();
+        $registrationForm->inviteId = \Yii::$app->session->get('inviteId', null);
+        $registrationForm->inviteDate = \Yii::$app->session->get('inviteDate', date('Y-m-d H:i:s'));
 
         if (\Yii::$app->request->isPost) {
             $registrationForm->load(\Yii::$app->request->post());
@@ -20,6 +22,9 @@ class AccountController extends \app\base\Controller {
 
             try {
                 if ($registrationForm->run()) {
+                    \Yii::$app->session->remove('inviteId');
+                    \Yii::$app->session->remove('inviteDate');
+                    
                     return \Yii::$app->user->login($registrationForm->user) ? $this->goAccount() : $this->goHome();
                 }
             } catch (Exception $e) {
