@@ -31,4 +31,17 @@ class SiteController extends \app\base\Controller
         \Yii::$app->user->logout();
         return $this->goHome();
     }
+
+    public function actionInvite($inviteId) {
+        if (!$this->user->isGuest) {
+            return $this->goHome();
+        }
+
+        if (!\Yii::$app->session->has('inviteId')) {
+            \Yii::$app->session->set('inviteId', $inviteId);
+            \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
+        }
+
+        return $this->goRegistration();
+    }
 }

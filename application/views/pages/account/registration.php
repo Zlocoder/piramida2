@@ -45,8 +45,16 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 
         <?= $form->field($registrationForm, 'confirm')->passwordInput() ?>
 
-        <div class="form-group">
-            <button class="btn btn-primary pull-right"><?= Yii::t('app', 'Send') ?></button>
+        <div class="form-group text-center">
+            <?php if ($registrationForm->isParentAdmin) { ?>
+                <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Register') ?></button>
+            <?php } else { ?>
+                <button type="submit"  class="btn btn-primary">
+                    <?= Yii::t('app', 'Register by invite ({fullname})', [
+                            'fullname' => $registrationForm->parentInvite->user->fullname
+                    ]) ?>
+                </button>
+            <?php } ?>
         </div>
 
         <?php ActiveForm::end(); ?>

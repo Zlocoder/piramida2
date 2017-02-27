@@ -9,6 +9,12 @@ class Controller extends \yii\web\Controller {
         return \Yii::$app->user;
     }
 
+    public function init() {
+        if (!\Yii::$app->session->has('inviteDate')) {
+            \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
+        }
+    }
+
     protected function prepareNavigation() {
         $this->view->params['mainNav'] = [
             ['label' => 'Page 1', 'url' => '#'],
