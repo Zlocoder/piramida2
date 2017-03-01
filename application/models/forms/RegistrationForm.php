@@ -14,12 +14,15 @@ class RegistrationForm extends \yii\base\Model {
     public $password;
     public $confirm;
     public $photo;
+
     public $inviteDate;
 
-    private $_inviteId;
+    private $_parentInviteId;
+    private $_parentInvite;
+    
     private $_user;
     private $_userInvite;
-    private $_parentInvite;
+    private $_userPosition;
 
     public function rules() {
         return [
@@ -43,12 +46,12 @@ class RegistrationForm extends \yii\base\Model {
     }
 
     public function setInviteId($inviteId) {
-        $this->_inviteId = $inviteId;
+        $this->_parentInviteId = $inviteId;
         $this->_parentInvite = null;
     }
 
     public function getInviteId() {
-        return $this->_inviteId;
+        return $this->_parentInviteId;
     }
 
     public function run() {
@@ -58,6 +61,7 @@ class RegistrationForm extends \yii\base\Model {
             try {
                 $this->createUser();
                 $this->createInvite();
+                $this->createPosition();
 
                 $transaction->commit();
             } catch (Exception $e) {
@@ -112,17 +116,25 @@ class RegistrationForm extends \yii\base\Model {
         $this->_userInvite = $invite;
     }
 
+    private function createPosition() {
+        $this->_userPosition = $this->_parentInvite->user->position->append($this->_user->id);
+    }
+
     public function getUser() {
         return $this->_user;
     }
 
     public function getUserInvite() {
-        return $this->_invite;
+        return $this->_userInvite;
+    }
+
+    public function getUserPosition() {
+        return $this->_userPosition;
     }
 
     public function getParentInvite() {
         return $this->_parentInvite = $this->_parentInvite ?: Invite::find()
-                ->where(['userId' => $this->_inviteId])
+                ->where(['userId' => $this->_parentInviteId])
                 ->orWhere(['userId' => 1])
                 ->orderBy(['userId' => SORT_DESC])
                 ->one();
