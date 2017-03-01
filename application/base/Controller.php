@@ -27,6 +27,10 @@ class Controller extends \yii\web\Controller {
             $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'SignIn'), 'url' => Url::to(['site/login'])];
             $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'Registration'), 'url' => Url::to(['account/registration'])];
         } else {
+            if ($this->user->id == 1) {
+                $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'Users'), 'url' => Url::to(['admin-users/index'])];
+            }
+
             $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'My cabinet'), 'url' => Url::to(['account/index'])];
             $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'SignOut') . " ({$this->user->fullname})", 'url' => Url::to(['site/logout'])];
         }
