@@ -8,7 +8,10 @@ use yii\base\Exception;
 
 class AccountController extends \app\base\Controller {
     public function actionIndex() {
-        return $this->render('index');
+        return $this->render('index', [
+            'account' => $this->user->identity,
+            'counts' => $this->user->position->counts
+        ]);
     }
 
     public function actionRegistration() {
