@@ -24,11 +24,11 @@ class Invite extends \app\base\ActiveRecord {
 
     // Invite relations
     public function getParent() {
-        return $this->hasOne(self::className(), ['userId', 'parentId']);
+        return $this->hasOne(self::className(), ['userId' => 'parentId']);
     }
 
     public function getChilds() {
-        return $this->hasMany(self::className(), ['parentId', 'userId']);
+        return $this->hasMany(self::className(), ['parentId' => 'userId']);
     }
 
     // User relations
@@ -41,6 +41,6 @@ class Invite extends \app\base\ActiveRecord {
     }
 
     public function getChildUsers() {
-        return $this->hasMany(User::className(), ['id', 'userId'])->via('childs');
+        return $this->hasMany(User::className(), ['id' => 'userId'])->via('childs');
     }
 }
