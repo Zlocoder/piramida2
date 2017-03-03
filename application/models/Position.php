@@ -58,12 +58,12 @@ class Position extends \app\base\ActiveRecord {
 
     public function getCounts() {
         return (new Query())
-            ->select('count')
+            ->select('count, level')
             ->from('position_counts')
             ->where(['id' => $this->id])
             ->orderBy('level')
             ->indexBy('level')
-            ->all();
+            ->column();
     }
 
     public function append($userId) {
