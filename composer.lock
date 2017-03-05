@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b3a2faddfc94e61bf6730202aebf467",
+    "content-hash": "a0bae2af63a36921b670741bb5093088",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -1585,6 +1585,52 @@
                 "mailer"
             ],
             "time": "2017-02-13T07:52:53+00:00"
+        },
+        {
+            "name": "yii-dream-team/yii2-perfect-money",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yii-dream-team/yii2-perfect-money.git",
+                "reference": "0c9cf93658c4bcb6414fe5c8f3e4f0dcf05b72bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yii-dream-team/yii2-perfect-money/zipball/0c9cf93658c4bcb6414fe5c8f3e4f0dcf05b72bc",
+                "reference": "0c9cf93658c4bcb6414fe5c8f3e4f0dcf05b72bc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "~2"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "yiidreamteam\\perfectmoney\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Samoylov",
+                    "email": "alexey.samoylov@gmail.com",
+                    "homepage": "http://yiidreamteam.com/team/alexey",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PerfectMoney component for Yii2",
+            "homepage": "http://yiidreamteam.com/yii2/perfect-money",
+            "keywords": [
+                "billing",
+                "payment",
+                "perfectmoney",
+                "yii2"
+            ],
+            "time": "2016-01-14T02:25:43+00:00"
         },
         {
             "name": "yiisoft/yii2",
