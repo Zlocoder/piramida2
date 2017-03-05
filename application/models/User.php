@@ -60,6 +60,11 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(Position::className(), ['userId' => 'id']);
     }
 
+    // Invoice Relations
+    public function getInvoices() {
+        return $this->hasMany(Invoice::className(), ['userId' => 'id']);
+    }
+
     // Custom fields
     public function getFullname() {
         if ($this->firstname == $this->lastname) {
