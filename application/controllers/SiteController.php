@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\forms\LoginForm;
+use app\models\Invite;
+use app\models\User;
 
 class SiteController extends \app\base\Controller
 {
@@ -38,10 +40,29 @@ class SiteController extends \app\base\Controller
         }
 
         if (!\Yii::$app->session->has('inviteId')) {
-            \Yii::$app->session->set('inviteId', $inviteId);
-            \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
+            $user = User::findOne(['login' => $inviteId]);
+            if ($user && $user->status->isActive && $user->invite) {
+                \Yii::$app->session->set('inviteId', $user->id);
+                \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
+            }
         }
 
         return $this->goRegistration();
+    }
+
+    public function actionMarketing() {
+        return $this->render('/marketing');
+    }
+
+    public function actionFaq() {
+        return $this->render('/faq');
+    }
+
+    public function actionNews() {
+        return $this->render('/news');
+    }
+
+    public function actionVideo() {
+        return $this->render('/video');
     }
 }

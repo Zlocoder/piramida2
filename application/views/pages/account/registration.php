@@ -33,6 +33,13 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
             'options' => ['accept' => 'image/jpg, image/png, image/jpeg']
         ]) ?>
 
+        <?php if ($registrationForm->inviteId && $registrationForm->parentInvite->userId == $registrationForm->inviteId) { ?>
+            <div class="form-group">
+                <label class="control-label">Спонсор</label>
+                <p class="form-control-static"><?= $registrationForm->parentInvite->user->login ?></p>
+            </div>
+        <?php } ?>
+
         <?= $form->field($registrationForm, 'firstname', ['inputOptions' => ['autofocus' => true]]) ?>
 
         <?= $form->field($registrationForm, 'lastname') ?>
@@ -41,23 +48,37 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 
         <?= $form->field($registrationForm, 'email') ?>
 
+        <?= $form->field($registrationForm, 'country')->dropDownList(require Yii::getAlias('@app/base/countries.php'), [
+            'prompt' => 'Choose country...'
+        ]) ?>
+
+        <?= $form->field($registrationForm, 'phone') ?>
+
+        <?= $form->field($registrationForm, 'skype') ?>
+
+        <?= $form->field($registrationForm, 'pmId') ?>
+
         <?= $form->field($registrationForm, 'password')->passwordInput() ?>
 
         <?= $form->field($registrationForm, 'confirm')->passwordInput() ?>
 
         <div class="form-group text-center">
-            <?php if ($registrationForm->isParentAdmin) { ?>
                 <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Register') ?></button>
-            <?php } else { ?>
-                <button type="submit"  class="btn btn-primary">
-                    <?= Yii::t('app', 'Register by invite ({fullname})', [
-                            'fullname' => $registrationForm->parentInvite->user->fullname
-                    ]) ?>
-                </button>
-            <?php } ?>
         </div>
 
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+
+<?php if (\Yii::$app->session->hasFlash('isPost')) { ?>
+    <script>console.log('post request')</script>
+    <?php \Yii::$app->session->removeFlash('isPost') ?>
+<?php } ?>
+
+<?php if (\Yii::$app->session->hasFlash('error')) { ?>
+    <script>console.log('Error: <?= \Yii::$app->session->getFlash('error') ?>')</script>
+    <?php \Yii::$app->session->removeFlash('error') ?>
+<?php } ?>
+
+
 

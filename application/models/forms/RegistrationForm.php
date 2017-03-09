@@ -4,6 +4,8 @@ namespace app\models\forms;
 
 use app\models\User;
 use app\models\Invite;
+use app\models\UserPayment;
+use app\models\UserStatus;
 use yii\base\Exception;
 
 class RegistrationForm extends \yii\base\Model {
@@ -14,6 +16,10 @@ class RegistrationForm extends \yii\base\Model {
     public $password;
     public $confirm;
     public $photo;
+    public $pmId;
+    public $phone;
+    public $skype;
+    public $country;
 
     public $inviteDate;
 
@@ -26,9 +32,13 @@ class RegistrationForm extends \yii\base\Model {
 
     public function rules() {
         return [
-            [['login', 'email', 'password', 'confirm', 'inviteDate'], 'required'],
+            [['login', 'email', 'password', 'confirm', 'inviteDate', 'pmId', 'country'], 'required'],
 
-            [['firstname', 'lastname', 'login', 'password'], 'string', 'min' => 3, 'max' => 25],
+            [['firstname', 'lastname', 'login', 'password', 'skype'], 'string', 'min' => 3, 'max' => 25],
+            [['login', 'skype', 'password'], 'match', 'pattern' => '/^[^ ]{3,25}$/'],
+            [['phone'], 'string', 'min' => 5, 'max' => 25],
+            [['pmId'], 'string', 'max' => 25],
+            [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/'],
             [['email'], 'string', 'max' => 100],
             [['email'], 'email'],
             [['inviteDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
@@ -45,6 +55,12 @@ class RegistrationForm extends \yii\base\Model {
         ];
     }
 
+    public function attributeLabels() {
+        return [
+            'pmId' => 'Prefect Money'
+        ];
+    }
+
     public function setInviteId($inviteId) {
         $this->_parentInviteId = $inviteId;
         $this->_parentInvite = null;
@@ -52,6 +68,10 @@ class RegistrationForm extends \yii\base\Model {
 
     public function getInviteId() {
         return $this->_parentInviteId;
+    }
+
+    public function getPhoneDigits() {
+        return preg_replace('/[^\d]/', '', $this->phone);
     }
 
     public function run() {
@@ -62,6 +82,8 @@ class RegistrationForm extends \yii\base\Model {
                 $this->createUser();
                 $this->createInvite();
                 $this->createPosition();
+                $this->createPayment();
+                $this->createStatus();
 
                 $transaction->commit();
             } catch (Exception $e) {
@@ -82,7 +104,11 @@ class RegistrationForm extends \yii\base\Model {
             'lastname' => $this->lastname,
             'login' => $this->login,
             'password' => \Yii::$app->security->generatePasswordHash($this->password),
-            'email' => $this->email
+            'email' => $this->email,
+            'country' => $this->country,
+            'phone' => $this->phone,
+            'phoneDigits' => $this->getPhoneDigits(),
+            'skype' => $this->skype
         ]);
 
         if (!$user->save()) {
@@ -118,6 +144,31 @@ class RegistrationForm extends \yii\base\Model {
 
     private function createPosition() {
         $this->_userPosition = $this->_parentInvite->user->position->append($this->_user->id);
+    }
+
+    private function createPayment() {
+        $payment = new UserPayment([
+            'userId' => $this->_user->id,
+            'pmId' => strtoupper($this->pmId),
+            'payed' => 0,
+            'earned' => 0
+        ]);
+
+        if (!$payment->save()) {
+            throw new Exception('Can not save payment');
+        }
+    }
+
+    private function createStatus() {
+        $status = new UserStatus([
+            'userId' => $this->_user->id,
+            'status' => 'RUBY',
+            'active' => new \yii\db\Expression('NOW()')
+        ]);
+
+        if (!$status->save()) {
+            throw new Exception('Can not save UserStatus');
+        }
     }
 
     public function getUser() {

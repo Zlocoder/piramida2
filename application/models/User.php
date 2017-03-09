@@ -36,12 +36,14 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public function rules() {
         return [
-            [['firstname', 'lastname', 'login', 'password', 'email'], 'required'],
+            [['firstname', 'lastname', 'login', 'password', 'email', 'country'], 'required'],
 
-            [['firstname', 'lastname', 'login'], 'string', 'min' => 3, 'max' => 25],
+            [['firstname', 'lastname', 'login', 'skype'], 'string', 'min' => 3, 'max' => 25],
+            [['login', 'skype'], 'match', 'pattern' => '/^[^ ]{3,25}$/'],
             [['password'], 'string', 'min' => 60, 'max' => 60],
             [['email'], 'string', 'max' => 100],
-
+            [['country'], 'string', 'max' => 100],
+            [['phoneDigits', 'phone'], 'string', 'min' => 5, 'max' => 25],
             [['email'], 'email'],
 
             [['login', 'email'], 'unique'],
@@ -60,9 +62,25 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(Position::className(), ['userId' => 'id']);
     }
 
-    // Invoice Relations
+    // Invoice Relation
     public function getInvoices() {
-        return $this->hasMany(Invoice::className(), ['userId' => 'id']);
+        return $this->hasMany(Invoice::className(), ['userId' => 'id'])
+            ->where([
+                'or',
+                ['invoiceStatus' => 'payed'],
+                ['invoiceStatus' => 'complete']
+            ])
+            ->orderBy(['created' => SORT_DESC]);
+    }
+
+    // Status relation
+    public function getStatus() {
+        return $this->hasOne(UserStatus::className(), ['userId' => 'id']);
+    }
+
+    // Payment relation
+    public function getPayment() {
+        return $this->hasOne(UserPayment::className(), ['userId' => 'id']);
     }
 
     // Custom fields
@@ -71,7 +89,7 @@ class User extends ActiveRecord implements IdentityInterface {
             return $this->firstname;
         }
 
-        return $this->firtsname . ' ' . $this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     // Photo
@@ -117,5 +135,32 @@ class User extends ActiveRecord implements IdentityInterface {
         }
 
         return \Yii::getAlias("@web/images/photo/default$sizePart.png");
+    }
+
+    // Custom methods
+    public function applyInvoice($invoice) {
+        if ($invoice->userId != $this->id) {
+            return false;
+        }
+
+        $status = $this->status;
+        $status->status = $invoice->userStatus;
+        $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+        /*
+        if ($status->active < date('Y-m-d H:i:s')) {
+            $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+        } else {
+            $status->active = new \yii\db\Expression('DATE_ADD(active, INTERVAL 1 MONTH)');
+        }
+        */
+
+        if (!$status->save()) {
+            throw new Exception('Can not update UserStatus');
+        };
+
+        $this->payment->payed += $invoice->amount;
+        if (!$this->payment->save()) {
+            throw new Exception('Can not update payment');
+        }
     }
 }

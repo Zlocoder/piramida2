@@ -13,15 +13,14 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class AppAsset extends AssetBundle
+class AdminAsset extends AssetBundle
 {
-    public $sourcePath = '@app/views/src/app-asset';
+    public $sourcePath = '@app/views/src/admin-asset';
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
     ];
     public $js = [
-        'js/jquery.countdown.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

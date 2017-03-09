@@ -30,6 +30,18 @@ class Position extends \app\base\ActiveRecord {
         return $this->find()->where(['id' => $this->id >> 1]);
     }
 
+    public function getParents() {
+        $position = $this->id;
+
+        $parents = [];
+        while (($position >> 1) > 0) {
+            $position = $position >> 1;
+            $parents[] = $position;
+        }
+
+        return $this->find()->where(['id' => $parents])->orderBy(['level' => SORT_DESC]);
+    }
+
     public function getLeft() {
         return $this->find()->where(['id' => $this->id << 1]);
     }
@@ -41,6 +53,15 @@ class Position extends \app\base\ActiveRecord {
     // User relations
     public function getUser() {
         return $this->hasOne(User::className(), ['id' => 'userId']);
+    }
+
+    public function getChildUsers() {
+        return (new Query())
+            ->from("position as p")
+            ->leftJoin('user as u', 'u.id = p.userId')
+            ->select(['u.*', 'p.id as position', new \yii\db\Expression("p.level - {$this->level} as level")])
+            ->orderBy("p.id")
+            ->where("p.level > {$this->level} AND (p.id >> (p.level - $this->level) = {$this->id})");
     }
 
     // Custom methods

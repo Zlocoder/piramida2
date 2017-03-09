@@ -12,17 +12,23 @@ class m170219_100037_create_user_table extends Migration
         try {
             $this->createTable('user', [
                 'id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT',
+                'login' => $this->string(25)->notNull(),
+                'email' => $this->string(100)->notNull(),
+                'phoneDigits' => $this->string(25),
+                'skype' => $this->string(25),
+                'country' => $this->string(25)->notNull(),
+                'phone' => $this->string(25),
+                'password' => $this->string(60)->notNull(),
                 'firstname' => $this->string(25)->notNull(),
                 'lastname' => $this->string(25)->notNull(),
-                'login' => $this->string(25)->notNull(),
-                'password' => $this->string(60)->notNull(),
-                'email' => $this->string(100)->notNull(),
                 'created' => $this->dateTime()->notNull(),
                 'updated' => $this->dateTime()->notNull(),
             ]);
 
             $this->createIndex('login', 'user', 'login', true);
             $this->createIndex('email', 'user', 'email', true);
+            $this->createIndex('phoneDigits', 'user', 'phoneDigits', true);
+            $this->createIndex('skype', 'user', 'skype', true);
 
             $this->insert('user', [
                 'id' => 1,

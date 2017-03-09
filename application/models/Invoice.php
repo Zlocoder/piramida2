@@ -10,10 +10,10 @@ class Invoice extends \app\base\ActiveRecord {
 
     public function rules() {
         return [
-            [['userId', 'userStatus', 'invoiceStatus', 'amount'], 'required'],
+            [['userId', 'userStatus', 'invoiceStatus', 'amount', 'accrual'], 'required'],
 
             [['userId'], 'integer'],
-            [['amount'], 'double'],
+            [['amount', 'accrual'], 'double'],
             [['userStatus', 'invoiceStatus'], 'string', 'max' => 25],
 
             [['userId'], 'exist', 'targetClass' => User::className(), 'targetAttribute' => 'id']
@@ -28,5 +28,10 @@ class Invoice extends \app\base\ActiveRecord {
     // Custom fields
     public function getDescription() {
         return "Оплата статуса ({$this->userStatus})";
+    }
+
+    // Transaction relation
+    public function getTransactions() {
+        return $this->hasMany(Transaction::className(), ['invoiceId' => 'id'])->orderBy('id');
     }
 }

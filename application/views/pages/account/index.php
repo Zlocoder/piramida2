@@ -18,10 +18,29 @@ $this->params['breadcrumbs'][] = ['label' => 'My cabinet'];
                 <p><?= $account->firstname . ' ' . $account->lastname ?></p>
                 <p><img src="<?= $account->getPhotoUrl([200, 200]) ?>" /></p>
 
+                <p>
+                    <b>RefLink:</b>
+                    <a href="<?= $ref = \yii\helpers\Url::to(['site/invite', 'inviteId' => $account->id]) ?>"><?= $ref ?></a>
+                </p>
                 <p><b>Login:</b> <?= $account->login ?></p>
                 <p><b>Email:</b> <?= $account->email ?></p>
                 <p><b>Invited by:</b> <?= $account->invite->parentUser->login ?></p>
                 <p><b>Invited count:</b> <?= $account->invite->count ?></p>
+                <p><b>Earned:</b> <?= $account->payment->earned ?></p>
+                <?php if ($account->status) { ?>
+                    <p><b>Status:</b> <?= $account->status->status ?></p>
+                    <p><b>Time:</b> <span id="countdown"></span></p>
+
+                    <?php $this->registerJs("
+                        $('#countdown').countdown('" . $time . "', function(event) {
+                            $(this).html(event.strftime('%D days %H:%M:%S'));
+                        });
+                    "); ?>
+                <?php } else { ?>
+                    <p><b>Status:</b> RUBY</p>
+                    <p><b>Time:</b> <span id="countdown">00:00:00</span></p>
+                <?php } ?>
+                <p><b><a href="<?= \yii\helpers\Url::to(['account/order']) ?>">Pay for status</a></b></p>
             </div>
         </div>
     </div>
@@ -39,11 +58,11 @@ $this->params['breadcrumbs'][] = ['label' => 'My cabinet'];
             </tbody>
 
             <tbody>
-                <?php foreach ($account->invite->childUsers as $invited) { ?>
+                <?php foreach ($childs as $child) { ?>
                     <tr>
-                        <td><?= $invited->login ?></td>
-                        <td><?= $invited->position->level - $account->position->level ?></td>
-                        <td><?= $invited->created ?></td>
+                        <td><?= $child['login'] ?></td>
+                        <td><?= $child['level']?></td>
+                        <td><?= $child['created'] ?></td>
                     </tr>
                 <?php } ?>
             </tbody>
