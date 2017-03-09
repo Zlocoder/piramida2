@@ -15,10 +15,12 @@ use yii\web\AssetBundle;
  */
 class AppAsset extends AssetBundle
 {
-    public $sourcePath = '@app/views/src/app-asset';
+    public $sourcePath = '@app/views/package';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
+        'css/normalize.css',
+        'css/style.css',
+        'css/cabinet_style.css',
     ];
     public $js = [
         'js/jquery.countdown.min.js',

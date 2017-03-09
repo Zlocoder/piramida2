@@ -6,7 +6,7 @@ $this->title = 'Diamond reward - news';
 ?>
 
 <div class="row">
-    <div class="col-lg-10 col-lg-offset-1 text-center" style="background-color: rgba(255, 255, 255, 0.85); padding-top: 10px; padding-bottom: 10px; margin-top: 20px;">
+    <div class="col-lg-10 col-lg-offset-1 text-center" style="background-color: rgba(255, 255, 255, 0.7); padding-top: 10px; padding-bottom: 10px; margin-top: 20px;">
         <h2>Сейчас мы на этапе завершения технических работ на сайте.</h2>
 
         <div class="row" style="margin-top: 20px;">

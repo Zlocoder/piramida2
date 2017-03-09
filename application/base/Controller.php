@@ -17,15 +17,18 @@ class Controller extends \yii\web\Controller {
 
     protected function prepareNavigation() {
         $this->view->params['mainNav'] = [
-            ['label' => 'Page 1', 'url' => '#'],
-            ['label' => 'Page 2', 'url' => '#'],
-            ['label' => 'Page 3', 'url' => '#'],
+            ['label' => 'Главная', 'url' => '/'],
+            ['label' => 'Маркетинг', 'url' => '/site/marketing/'],
+            ['label' => 'Новости', 'url' => '/site/news/'],
+            ['label' => 'Вопрос/ответ', 'url' => '/site/faq/'],
+            ['label' => 'Контакты', 'url' => '#'],
+            ['label' => 'Ролики', 'url' => '/site/video/'],
         ];
 
         $this->view->params['userNav'] = [];
         if ($this->user->isGuest) {
-            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'SignIn'), 'url' => Url::to(['site/login'])];
-            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'Registration'), 'url' => Url::to(['account/registration'])];
+            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'Вход'), 'url' => Url::to(['site/login'])];
+            $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'Регистрация'), 'url' => Url::to(['account/registration'])];
         } else {
             $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'My cabinet'), 'url' => Url::to(['account/index'])];
             $this->view->params['userNav'][] = ['label' => \Yii::t('app', 'SignOut') . " ({$this->user->fullname})", 'url' => Url::to(['site/logout'])];

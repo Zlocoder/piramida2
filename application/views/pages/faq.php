@@ -2,10 +2,10 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Diamond reward - faq';
+$this->title = 'Diamond reward';
 ?>
 
-<div class="col-lg-10 col-lg-offset-1 text-center" style="background-color: rgba(255, 255, 255, 0.85); padding-top: 10px; padding-bottom: 10px; margin-top: 20px;">
+<div class="col-lg-10 col-lg-offset-1 text-center" style="background-color: rgba(255, 255, 255, 0.7); padding-top: 10px; padding-bottom: 10px; margin-top: 20px;">
     <h1>Вопрос-Ответ</h1>
 
     <div class="row" style="margin-top: 20px;">
@@ -27,7 +27,8 @@ $this->title = 'Diamond reward - faq';
             <p>При правильно организованной работе может составлять ежедневные
                 внушительные суммы перечислений. Ваш заработок ничем не ограничен.</p>
 
-            <p style="padding-bottom: 15px;">Описание заработка Вы найдете в <a href="<?= \yii\helpers\Url::to(['site/marketing']) ?>">"Маркетинге"</a>.</p>
+            <p style="padding-bottom: 15px;">Описание заработка Вы найдете в <span class="a">
+                <a href="<?= \yii\helpers\Url::to(['site/marketing']) ?>">"Маркетинге"</a></span>.</p>
 
             <h4>Какие платежные Системы используются?</h4>
 
