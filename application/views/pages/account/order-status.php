@@ -103,13 +103,13 @@ $this->params['section_class'] = 'cabinet';
 						</li>
 					<?php } ?>
                 </ul>
-                <button><a href="/site/logout">Выход</a></button>
+                <a href="/site/logout"><button>Выход</button></a>
             </div>
 			
 
             <div class="col-lg-7">
 				<div class="row" style="padding-top: 20px;">
-                    <h4 class="text-center">Оплата стаутуса</h4>
+                    <h4 class="text-center">Оплата статуса</h4>
 					<div class="col-lg-8 col-lg-offset-2">
 						<form method="post" target="_blank">
 							<input type="hidden" name="_csrf" value="<?= \Yii::$app->request->csrfToken ?>" />

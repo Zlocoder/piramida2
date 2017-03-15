@@ -9,7 +9,7 @@ $this->title = 'Diamond reward';
     <h1>Вопрос-Ответ</h1>
 
     <div class="row" style="margin-top: 20px;">
-        <div class="col-lg-8 col-lg-offset-2 text-left" style="font-size: 16px;">
+        <div class="col-lg-8 col-lg-offset-2 text-left faq" style="font-size: 16px;">
             <h4>Как зарегистрироваться в Проекте?</h4>
 
             <p>Нажмите Кнопку "Регистрация" на Главной странице Сайта. Заполните все необходимые поля,

@@ -101,7 +101,7 @@ $this->params['section_class'] = 'cabinet';
 						</li>
 					<?php } ?>
                 </ul>
-                <button><a href="/site/logout">Выход</a></button>
+                <a href="/site/logout"><button>Выход</button></a>
             </div>
 
             <div class="col-lg-7">

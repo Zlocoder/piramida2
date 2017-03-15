@@ -101,7 +101,7 @@ $this->params['section_class'] = 'cabinet';
                     </li>
                 <?php } ?>
             </ul>
-            <button><a href="/site/logout">Выход</a></button>
+            <a href="/site/logout"><button>Выход</button></a>
         </div>
 
         <div class="col-sm-7">
@@ -180,16 +180,18 @@ $this->params['section_class'] = 'cabinet';
                             <table class="table">
                                 <tbody>
                                 <tr>
-                                    <th style="text-align: center;">Страна</th>
                                     <th style="text-align: center;">Логин</th>
+                                    <th style="text-align: center;">Страна</th>
+
                                 </tr>
                                 </tbody>
 
                                 <tbody class="new_style">
                                     <?php foreach ($last_users as $user) { ?>
                                         <tr>
-                                            <td><?= $countries[$user->country] ?></td>
                                             <td><?= $user->login ?></td>
+                                            <td><?= $countries[$user->country] ?></td>
+
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -202,13 +204,28 @@ $this->params['section_class'] = 'cabinet';
 
         <div class="col-sm-2 right_cab">
             <div class="levels">Уровни</div>
-            <ul>
-                <?php $max = 2; ?>
-                <?php for ($level = 1; $level < 22; $level++) { ?>
-                    <li><?= $level ?> - <?= $max ?> - <?= $counts[$level] ?: 0 ?></li>
-                    <?php $max *= 2 ?>
-                <?php } ?>
-            </ul>
+            <table class="table">
+                <tbody class="new_style">
+
+<!--                    <th style="text-align: center;">Логин</th>-->
+<!--                    <th style="text-align: center;">Страна</th>-->
+
+
+
+
+                    <?php $max = 2; ?>
+                    <?php for ($level = 1; $level < 22; $level++) { ?>
+                        <tr>
+                            <td><?= $level ?> -</td>
+                            <td><?= $max ?> -</td>
+                            <td><?= $counts[$level] ?: 0 ?></td>
+                            <?php $max *= 2 ?>
+                        </tr>
+
+                    <?php } ?>
+
+                </tbody>
+            </table>
         </div>
     </main>
 </div>

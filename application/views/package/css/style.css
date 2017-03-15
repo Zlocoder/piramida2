@@ -116,3 +116,23 @@ a:hover,a:focus{
 	color: grey;
 	font-size: 1.5vw;
 }
+.faq p{
+	text-shadow: none;
+	color: black;
+	font-size: 1.7vw;
+
+}
+.faq h4{
+	margin-top: 2vw;
+}
+.faq a{
+	color: green;
+}
+.faq a:hover{
+	color: yellow;
+}
+.news p{
+	font-size: 1.7vw;
+	color: black;
+	text-shadow: none;
+}

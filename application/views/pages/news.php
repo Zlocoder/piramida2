@@ -10,7 +10,7 @@ $this->title = 'Diamond reward - news';
         <h2>Сейчас мы на этапе завершения технических работ на сайте.</h2>
 
         <div class="row" style="margin-top: 20px;">
-            <div class="col-lg-8 col-lg-offset-2 text-left" style="font-size: 16px;">
+            <div class="col-lg-8 col-lg-offset-2 text-left news" style="font-size: 16px;">
                 <p style="margin-bottom: 15px;">Рады сообщить всем.
                     Мы находимся на этапе завершения  технических работ над сайтом.
                     Добавляются отдельные функции. </p>
