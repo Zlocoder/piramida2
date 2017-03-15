@@ -137,6 +137,11 @@ class User extends ActiveRecord implements IdentityInterface {
         return \Yii::getAlias("@web/images/photo/default$sizePart.png");
     }
 
+    public function getHasPhoto() {
+        $dirname = \Yii::getAlias('@webroot/images/photo');
+        return file_exists("$dirname/{$this->id}.png");
+    }
+
     // Custom methods
     public function applyInvoice($invoice) {
         if ($invoice->userId != $this->id) {

@@ -55,11 +55,19 @@ class Position extends \app\base\ActiveRecord {
         return $this->hasOne(User::className(), ['id' => 'userId']);
     }
 
+    public function getChilds() {
+        return self::find()
+            ->where("level > {$this->level} AND (id >> (level - $this->level) = {$this->id})")
+            ->orderBy('id')
+            ->indexBy('id');
+    }
+
     public function getChildUsers() {
         return (new Query())
             ->from("position as p")
             ->leftJoin('user as u', 'u.id = p.userId')
-            ->select(['u.*', 'p.id as position', new \yii\db\Expression("p.level - {$this->level} as level")])
+            ->leftJoin('user_status as us', 'us.userId = u.id')
+            ->select(['u.*', new \yii\db\Expression('IF (us.active > NOW(), us.status, NULL) as status'), 'p.id as position', new \yii\db\Expression("p.level - {$this->level} as level")])
             ->orderBy("p.id")
             ->where("p.level > {$this->level} AND (p.id >> (p.level - $this->level) = {$this->id})");
     }

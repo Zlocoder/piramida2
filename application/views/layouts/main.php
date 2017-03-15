@@ -31,8 +31,7 @@ AppAsset::register($this);
     <section class="<?= $this->params['section_class'] ?: 'main' ?>">
         <?php if ($this->params['section_class'] == 'cabinet') { ?>
             <header>
-                <div class="container">
-                    <div class="row">
+                <div class="fluid-container">
                         <div class="col-sm-6 logo">
                             <a href="/"><img src="/images/logo.png" alt=""></a>
                         </div>
@@ -41,7 +40,6 @@ AppAsset::register($this);
                             <div>Добро пожаловать,</div>
                             <div class="who"><?= \Yii::$app->user->fullname ?></div>
                         </div>
-                    </div>
                 </div>
             </header>
         <?php } else { ?>
@@ -61,7 +59,7 @@ AppAsset::register($this);
 			    <?php if (\Yii::$app->user->isGuest) { ?>
 	                            <a href="<?= Url::to(['site/login']) ?>"><div class="enter">Вход</div></a>
         	                    <a href="<?= Url::to(['account/registration']) ?>"><div class="registr">Регистрация</div></a>
-                	            <div class="recover"></div>
+                	            <div class="recover"><a href="<?= Url::to(['site/forgot-password']) ?>"><div class="enter">Забыли пароль?</div></a></div>
 			    <?php } else { ?>
 	                            <a href="<?= Url::to(['account/index']) ?>"><div class="enter">Кабинет</div></a>
         	                    <a href="<?= Url::to(['site/logout']) ?>"><div class="registr">Выход</div></a>

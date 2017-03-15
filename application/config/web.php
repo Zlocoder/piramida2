@@ -10,5 +10,6 @@ return [
     'layoutPath' => dirname(__DIR__) . '/views/layouts',
     'components' => require(__DIR__ . '/web_components.php'),
     'modules' => require(__DIR__ . '/web_modules.php'),
+    'params' => require(__DIR__ . '/params.php'),
     'bootstrap' => ['debug'],
 ];

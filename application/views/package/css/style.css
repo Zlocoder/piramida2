@@ -35,7 +35,6 @@ a:hover,a:focus{
 }
 .logo img{
 	width: 25vw;
-	margin-left: 4vw;
 }
 .nav{
 	margin-top: 2vw;
@@ -60,6 +59,13 @@ a:hover,a:focus{
 	font-size: 1.5vw;
 	font-family: 'Lemonada', cursive;
 }
+
+@media screen and (min-width: 1865px) {
+	.paral a {
+		font-size: 1vw;
+	}
+}
+
 .paral a:hover{
 	color: #d0b156;
 }
@@ -67,7 +73,6 @@ a:hover,a:focus{
 	color: #d0b156;
 }
 .text-center{
-	background-color: rgba(255, 255, 255, 0.6);
 	padding:10px 0;
 	margin-top: 20px;
 	font-weight: bold;
@@ -80,6 +85,13 @@ a:hover,a:focus{
 	letter-spacing:0.3vw;
 	font-size: 3vw;
 	background: transparent;
+}
+.gradient-border {
+	padding: 20px;
+	letter-spacing: 0.2em;
+	border: 1px solid;
+	border-image: linear-gradient(20deg, #f92056 38%, #00deff 65%);
+	border-image-slice: 1;
 }
 .text-center h2{
 	color: #fa0751;

@@ -3,7 +3,7 @@
 	padding: 0;
 	width: 100%;
 	height: 100%;
-	padding-bottom: 10vw;
+	margin-top: -1vw;
 	background: url("../images/back_cabinet.png") no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
@@ -16,6 +16,7 @@
 }
 .block-head{
 	padding-left: 0;
+
 }
 .block-body{
 	padding-left: 0;
@@ -27,7 +28,6 @@
 }
 .logo img{
 	width: 25vw;
-	margin-left: -5vw;
 }
 .hi{
  	text-align: right;
@@ -40,14 +40,35 @@
 
 }
 
-.left_cab{
-	margin-left: -3vw;
-	margin-right: 3vw;
-	
-}
 .left_cab a{
 	color: #0f06cd;
 }
+
+#refLink {
+	position: relative;
+	float: right;
+	margin-left: 4px;
+}
+
+#refLink2 {
+	position: relative;
+	text-shadow: #223a9d 2px 2px 1px, #223a9d -2px -2px 1px, #223a9d -2px 2px 1px, #223a9d 2px -2px 1px;
+}
+
+#refLink .hint, #refLink2 .hint, #refLink:hover .hint, #refLink2:hover .hint {
+	display: none;
+	position: absolute;
+	background: #fff;
+	padding: 3px 5px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 7px rgba(0,0,0,0.8);
+	font-size: 1vw;
+}
+
+#refLink2:hover .hint {
+	color: #fff !important;
+}
+
 ul{
 	padding: 0;
 	text-decoration: none;
@@ -55,6 +76,7 @@ ul{
 }
 .left_cab li{
 	padding: 0.3vw 0;
+	font-family: 'Lemonada', cursive;
 }
 .left_cab a:hover .r{
 	color: #dfd586;
@@ -148,23 +170,26 @@ a:hover,a:focus{
 	background: rgba(225,75,107,0.6);
 	padding:1.62vw 0.7vw;
 	display: flex;
-	align-items: center;	
-	
+	align-items: center;
+	font-family: 'Lemonada', cursive;
+	text-align: center;
 	margin: 2vw 0;
 	box-shadow:  3px 3px 10px black;
 	
 }
 #countdown{
-	font-size:1.9vw;
+	font-size:1.5vw;
 	color: #fff;
 	text-shadow: #ea607a 2px 2px 1px, #ea607a -2px -2px 1px,
 	#ea607a -2px 2px 1px, #ea607a 2px -2px 1px;
 }
 #rew{
-	font-size:1.9vw;
+	font-size:1.5vw;
 	color: #fff;
 	text-shadow: #57966a 2px 2px 1px, #57966a -2px -2px 1px,
 	#57966a -2px 2px 1px, #57966a 2px -2px 1px;
+	font-family: 'Lemonada', cursive;
+
 }
 .m img{
 	width: 6vw;
@@ -185,8 +210,9 @@ a:hover,a:focus{
 	background: rgba(82,115,235,0.6);
 	padding:1.62vw 0.7vw;
 	display: flex;
-	align-items: center;	
-	
+	align-items: center;
+	font-family: 'Lemonada', cursive;
+	text-align: center;
 	margin: 2vw 0;
 	box-shadow:  3px 3px 10px black;
 	
@@ -225,6 +251,8 @@ a:hover,a:focus{
 	justify-content: flex-end;	
 	margin: 2vw 0;
 	box-shadow:  3px 3px 10px black;
+	font-family: 'Lemonada', cursive;
+	
 }
 .countReferals{
 	text-shadow: #f2bc10 2px 2px 1px, #f2bc10 -2px -2px 1px, 
@@ -233,7 +261,7 @@ a:hover,a:focus{
   	font-size: 2.2vw;
 	padding-bottom: 0.6vw;
 	padding-right: 1.2vw;
-
+	font-family: 'Lemonada', cursive;
 }
 .right_cab{
 	font-size: 1.1vw;

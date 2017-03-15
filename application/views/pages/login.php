@@ -11,9 +11,9 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Sign in');
 ?>
 
 <div class="row">
-    <h1 class="text-center"><?= \Yii::t('app', 'Please enter') ?></h1>
+    <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.65); padding-bottom: 15px; margin-top: 20px;">
+	<h1 class="text-center"><?= \Yii::t('app', 'Please enter') ?></h1>
 
-    <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.8); padding-top: 20px; padding-bottom: 20px;">
         <?php $form = ActiveForm::begin([
 
         ]) ?>

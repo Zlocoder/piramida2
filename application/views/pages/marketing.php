@@ -5,7 +5,7 @@
 $this->title = 'Diamond rewards - Маркетинг';
 ?>
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 text-center">
+    <div class="col-lg-8 col-lg-offset-2 text-center" style="background-color: rgba(255, 255, 255, 0.7);">
         <div class="m_img"><img src="/images/fonn.png" alt=""></div>
         <h1>Вместе к успеху</h1>
 

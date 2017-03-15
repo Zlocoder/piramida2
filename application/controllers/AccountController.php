@@ -5,6 +5,9 @@ namespace app\controllers;
 use app\models\forms\EditProfile;
 use app\models\forms\ChangePassword;
 use app\models\forms\RegistrationForm;
+use app\models\Position;
+use app\models\User;
+use app\models\UserActivation;
 use yii\web\UploadedFile;
 use yii\base\Exception;
 
@@ -45,7 +48,11 @@ class AccountController extends \app\base\Controller {
             'account' => $this->account,
             'childs' => $this->account->position->childUsers->all(),
             'refLink' => $this->reflink,
-            'counts' => $this->counts
+            'counts' => $this->counts,
+            'total_count' => User::find()->count(),
+            'last_users' => User::find()->with('status')->orderBy(['created' => SORT_DESC])->limit(20)->all(),
+            'top_users' => User::find()->joinWith('invite')->with('payment')->orderBy(['invite.count' => SORT_DESC])->limit(20)->all(),
+            'countries' => require(\Yii::getAlias('@app/base/countries.php'))
         ]);
     }
 
@@ -64,7 +71,17 @@ class AccountController extends \app\base\Controller {
                 if ($registrationForm->run()) {
                     \Yii::$app->session->remove('inviteId');
                     \Yii::$app->session->remove('inviteDate');
-                    
+
+                    \Yii::$app->mailer->compose('welcome', [
+                        'login' => $registrationForm->login,
+                        'password' => $registrationForm->password,
+                        'sponsor' => $registrationForm->inviteId ? $registrationForm->parentInvite->user->login : null,
+                        'code' => $registrationForm->activation->code
+                    ])->setFrom(\Yii::$app->params['mailFrom'])
+                        ->setTo($registrationForm->email)
+                        ->setSubject('Welcome to DIAMOND REWARDS')
+                        ->send();
+
                     return \Yii::$app->user->login($registrationForm->user) ? $this->goAccount() : $this->goHome();
                 }
             } catch (Exception $e) {
@@ -163,5 +180,43 @@ class AccountController extends \app\base\Controller {
             'counts' => $this->counts,
             'users' => $this->user->invite->getChilds()->with('user.position')->all()
         ]);
+    }
+
+    public function buildTree($tree, $positions) {
+        $id = (int)$tree->id;
+        if (isset($positions[$id << 1])) {
+            $tree->populateRelation('left', $this->buildTree($positions[$id << 1], $positions));
+        }
+
+        if (isset($positions[($id << 1) + 1])) {
+            $tree->populateRelation('right', $this->buildTree($positions[($id << 1) + 1], $positions));
+        }
+
+        return $tree;
+    }
+
+    public function actionTree($treeId = null) {
+        $position = $treeId ? Position::findOne($treeId) : $this->user->position;
+
+        return $this->render('tree', [
+            'account' => $this->account,
+            'refLink' => $this->reflink,
+            'counts' => $this->counts,
+            'tree' => $this->buildTree($position, $position->getChilds()
+                ->andWhere("level - {$position->level} < 4")
+                ->with(['user.status', 'user.invite'])
+                ->all()
+            ),
+        ]);
+    }
+
+    public function actionActivation($code) {
+        if ($activation = UserActivation::findOne(['code' => $code])) {
+            $user = User::findOne($activation->userId);
+            $user->active = 1;
+            $user->save();
+        }
+
+        return $this->redirect(['index']);
     }
 }

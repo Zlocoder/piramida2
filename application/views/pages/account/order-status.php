@@ -9,9 +9,8 @@ $this->params['section_class'] = 'cabinet';
 //$this->params['breadcrumbs'][] = ['label' => 'My cabinet'];
 ?>
 
-<main>
-    <div class="container">
-        <div class="row">
+<div class="row">
+    <main class="col-lg-12">
             <div class="col-lg-3 left_cab">
                 <div class="block person">
 
@@ -23,11 +22,35 @@ $this->params['section_class'] = 'cabinet';
                         <p><b>Логин:</b> <?= $account->login ?></p>
 						<?php if ($account->status->isActive) { ?>
 							<p><b>Статус:</b> <?= $account->status->status ?></p>
-							<p>
-								<b>Реф ссылка:</b>
-								<a href="" onclick="return false;"><?= $refLink ?></a>
-							</p>
-					<?php } ?>
+                            <p>
+                                <b>Реф ссылка:</b>
+                                <a href="<?= $refLink ?>" id="refLink" onclick="return false;">
+                                    Копировать
+                                    <span class="hint">Скопировано</span>
+                                </a>
+
+                                <?php $this->registerJs("
+                                    $('#refLink').click(function(e) {
+                                        e.preventDefault();
+                                        
+                                        var _temp = $('<input>');
+                                        $('body').append(_temp);
+                                        _temp.val($(this).attr('href')).select();
+                                        document.execCommand('copy');
+                                        _temp.remove();
+    
+                                        $(this).children('.hint').css({
+                                            left: e.offsetX + 5,
+                                            top: e.offsetY - 30
+                                        }).show();
+                                        
+                                        setTimeout(function() {
+                                            $('#refLink .hint').hide();
+                                        }, 2000);
+                                    });
+                                ") ?>
+                            </p>
+	    				<?php } ?>
                     </div>
                 </div>
                 
@@ -46,7 +69,7 @@ $this->params['section_class'] = 'cabinet';
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="/account/tree/">
                             <div class="sq"><div class="sq2"></div></div>
                             <div class="r">Матрица</div>
                         </a>
@@ -85,7 +108,8 @@ $this->params['section_class'] = 'cabinet';
 			
 
             <div class="col-lg-7">
-				<div class="row">
+				<div class="row" style="padding-top: 20px;">
+                    <h4 class="text-center">Оплата стаутуса</h4>
 					<div class="col-lg-8 col-lg-offset-2">
 						<form method="post" target="_blank">
 							<input type="hidden" name="_csrf" value="<?= \Yii::$app->request->csrfToken ?>" />
@@ -117,8 +141,5 @@ $this->params['section_class'] = 'cabinet';
                     <?php } ?>
                 </ul>
             </div>
-        </div>
-    </div>
-
-</main>
-
+    </main>
+</div>

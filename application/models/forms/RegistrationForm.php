@@ -4,9 +4,13 @@ namespace app\models\forms;
 
 use app\models\User;
 use app\models\Invite;
+use app\models\UserActivation;
 use app\models\UserPayment;
 use app\models\UserStatus;
+use yii\base\ErrorException;
 use yii\base\Exception;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 class RegistrationForm extends \yii\base\Model {
     public $firstname;
@@ -20,6 +24,7 @@ class RegistrationForm extends \yii\base\Model {
     public $phone;
     public $skype;
     public $country;
+    public $agree;
 
     public $inviteDate;
 
@@ -27,12 +32,13 @@ class RegistrationForm extends \yii\base\Model {
     private $_parentInvite;
     
     private $_user;
+    private $_activation;
     private $_userInvite;
     private $_userPosition;
 
     public function rules() {
         return [
-            [['login', 'email', 'password', 'confirm', 'inviteDate', 'pmId', 'country'], 'required'],
+            [['login', 'email', 'password', 'confirm', 'inviteDate', 'pmId', 'country', 'agree'], 'required'],
 
             [['firstname', 'lastname', 'login', 'password', 'skype'], 'string', 'min' => 3, 'max' => 25],
             [['login', 'skype', 'password'], 'match', 'pattern' => '/^[^ ]{3,25}$/'],
@@ -42,6 +48,8 @@ class RegistrationForm extends \yii\base\Model {
             [['email'], 'string', 'max' => 100],
             [['email'], 'email'],
             [['inviteDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+            [['agree'], 'boolean'],
+            [['agree'], 'compare', 'compareValue' => true, 'message' => 'You must argee.'],
 
             [['confirm'], 'compare', 'compareAttribute' => 'password'],
 
@@ -57,7 +65,7 @@ class RegistrationForm extends \yii\base\Model {
 
     public function attributeLabels() {
         return [
-            'pmId' => 'Prefect Money'
+            'pmId' => 'Prefect Money',
         ];
     }
 
@@ -80,6 +88,7 @@ class RegistrationForm extends \yii\base\Model {
 
             try {
                 $this->createUser();
+                $this->createActivation();
                 $this->createInvite();
                 $this->createPosition();
                 $this->createPayment();
@@ -108,7 +117,8 @@ class RegistrationForm extends \yii\base\Model {
             'country' => $this->country,
             'phone' => $this->phone,
             'phoneDigits' => $this->getPhoneDigits(),
-            'skype' => $this->skype
+            'skype' => $this->skype,
+            'active' => 0
         ]);
 
         if (!$user->save()) {
@@ -120,6 +130,19 @@ class RegistrationForm extends \yii\base\Model {
         }
 
         $this->_user = $user;
+    }
+
+    public function createActivation() {
+        $activation = new UserActivation([
+            'userId' => $this->user->id,
+            'code' => UserActivation::generateCode()
+        ]);
+
+        if (!$activation->save()) {
+            throw new Exception('Can not save user activation');
+        }
+
+        $this->_activation = $activation;
     }
 
     private function createInvite() {
@@ -173,6 +196,10 @@ class RegistrationForm extends \yii\base\Model {
 
     public function getUser() {
         return $this->_user;
+    }
+
+    public function getActivation() {
+        return $this->_activation;
     }
 
     public function getUserInvite() {

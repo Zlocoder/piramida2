@@ -31,6 +31,6 @@ class UserPayment extends \app\base\ActiveRecord {
     // PaymentHistory relation
     public function getHistory() {
         return $this->hasMany(PaymentHistory::className(), ['userId' => 'userId'])
-            ->orderBy(['created' => SORT_DESC]);
+            ->orderBy(['created' => SORT_DESC])->where(['!=', 'type', 'order']);
     }
 }

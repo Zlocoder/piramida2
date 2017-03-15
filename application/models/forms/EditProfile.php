@@ -7,11 +7,15 @@ use app\models\User;
 class EditProfile extends \yii\base\Model {
     public $phone;
     public $skype;
+    public $pmId;
 
     private $_user;
 
     public function rules() {
         return [
+            [['pmId'], 'required'],
+            [['pmId'], 'string', 'max' => 25],
+            [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/'],
             [['phone'], 'string', 'min' => 5, 'max' => 25],
             [['skype'], 'string', 'min' => 3, 'max' => 25],
 

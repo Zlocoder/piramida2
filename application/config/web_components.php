@@ -9,7 +9,15 @@ return [
     ],
     'mailer' => [
         'class' => 'yii\swiftmailer\Mailer',
-        'useFileTransport' => true,
+        'useFileTransport' => false,
+        'transport' => [
+            'class' => 'Swift_SmtpTransport',
+            'host' => 'smtp.gmail.com',
+            'username' => 'george.lemish@gmail.com',
+            'password' => 'dioralop19851013',
+            'port' => '587',
+            'encryption' => 'tls',
+        ],
     ],
     'assetManager' => [
         'forceCopy' => true

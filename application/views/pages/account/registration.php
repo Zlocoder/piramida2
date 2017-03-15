@@ -7,14 +7,16 @@
 
 use kartik\widgets\ActiveForm;
 use kartik\widgets\FileInput;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 ?>
 
 <div class="row">
-    <h1 class="text-center"><?= \Yii::t('app', 'Registration') ?></h1>
+    <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.65); margin-top: 20px;">
+        <h1 class="text-center"><?= \Yii::t('app', 'Registration') ?></h1>
 
-    <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.8); padding-top: 20px; padding-bottom: 20px;">
         <?php $form = ActiveForm::begin([
             'options' => [
                 'enctype' => 'multipart/form-data'
@@ -61,6 +63,16 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
         <?= $form->field($registrationForm, 'password')->passwordInput() ?>
 
         <?= $form->field($registrationForm, 'confirm')->passwordInput() ?>
+
+        <?= $form->field($registrationForm, 'agree')
+            ->checkbox([
+                'label' => '<b>I agree with ' . Html::a(
+                    'terms and conditions',
+                    Url::to(['site/terms-and-conditions']),
+                    ['target' => '_blank', 'style' => 'color: #337ab7;']
+                ) . '</b>'
+            ])
+        ?>
 
         <div class="form-group text-center">
                 <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Register') ?></button>
