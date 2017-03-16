@@ -152,16 +152,22 @@ $this->params['section_class'] = 'cabinet';
                     </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Firstname</label>
-						<div class="col-sm-8">
-							<p class="form-control-static"><?= $account->firstname ?></p>
-						</div>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" name="EditProfile[firstname]" value="<?= $model->firstname ?>" />
+                            <?php if ($model->hasErrors('firstname')) { ?>
+                                <p class="help-block help-block-error"><?= $model->errors['firstname'][0] ?></p>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Lastname</label>
-						<div class="col-sm-8">
-							<p class="form-control-static"><?= $account->lastname ?></p>
-						</div>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" name="EditProfile[lastname]" value="<?= $model->lastname ?>" />
+                            <?php if ($model->hasErrors('lastname')) { ?>
+                                <p class="help-block help-block-error"><?= $model->errors['lastname'][0] ?></p>
+                            <?php } ?>
+                        </div>
                     </div>
 
                     <div class="form-group">

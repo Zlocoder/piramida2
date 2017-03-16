@@ -80,7 +80,7 @@ class Position extends \app\base\ActiveRecord {
                 "id >> (level - {$this->level}) = {$this->id}",
                 ['<', 'appended', 2]
             ])
-            ->orderBy('level, appended, id')
+            ->orderBy('id')
             ->limit(1)
             ->one();
     }

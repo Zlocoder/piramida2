@@ -14,9 +14,13 @@
             <div class="description">
                 <p><b>Логин:</b> <?= $tree->user->login ?></p>
 
+                <p><b>Email:</b> <?= $tree->user->email ?></p>
+
                 <p><b>Статус:</b> <?= $tree->user->status->isActive ? $tree->user->status->status : 'Неактивен' ?></p>
 
                 <p><b>Приглашенных:</b> <?= $tree->user->invite->count ?></p>
+
+                <p><b>В дереве:</b> <?= $tree->user->position->total ?></p>
 
                 <p><b>Зарегистрирован:</b> <br/> <?= $tree->user->created ?></p>
             </div>

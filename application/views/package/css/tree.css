@@ -128,7 +128,7 @@
     padding-top: 0.5vw;
     padding-bottom: 0.5vw;
     text-align: center;
-    font-size: 1vw;
+    font-size: 0.9vw;
 }
 
 .tree .level-0 .description {
@@ -165,4 +165,46 @@
 
 .tree .arrow {
     position: absolute;
+    width: 100%;
+    background-image: url('../images/tree_arrow.svg');
+    background-size: 100% 100%;
+}
+
+.tree .level-0 .arrow {
+    height: 140%;
+    transform-origin: 50% -35%;
+}
+
+.tree .level-0 .arrow-left {
+    transform: rotate(65deg);
+}
+
+.tree .level-0 .arrow-right {
+    transform: rotate(-65deg);
+}
+
+.tree .level-1 .arrow {
+    height: 105%;
+    transform-origin: 50% -47%;
+}
+
+.tree .level-1 .arrow-left {
+    transform: rotate(38deg);
+}
+
+.tree .level-1 .arrow-right {
+    transform: rotate(-38deg);
+}
+
+.tree .level-2 .arrow {
+    height: 100%;
+    transform-origin: 50% -50%;
+}
+
+.tree .level-2 .arrow-left {
+    transform: rotate(20deg);
+}
+
+.tree .level-2 .arrow-right {
+    transform: rotate(-20deg);
 }

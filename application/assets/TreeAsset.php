@@ -10,7 +10,6 @@ class TreeAsset extends \yii\web\AssetBundle {
     ];
 
     public $js = [
-        'js/svg.min.js',
         'js/tree.js'
     ];
 

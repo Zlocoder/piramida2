@@ -97,21 +97,25 @@ class AccountController extends \app\base\Controller {
         $changePassword = new ChangePassword(['user' => $this->user->identity]);
 
         if (\Yii::$app->request->isPost) {
-            if (\Yii::$app->request->post('EditProfile')) {
-                $editProfile->load(\Yii::$app->request->post());
+            try {
+                if (\Yii::$app->request->post('EditProfile')) {
+                    $editProfile->load(\Yii::$app->request->post());
 
-                if ($editProfile->run()) {
-                    return $this->goAccount();
+                    if ($editProfile->run()) {
+                        return $this->goAccount();
+                    }
                 }
-            }
 
-            if (\Yii::$app->request->post('ChangePassword')) {
-                $changePassword->load(\Yii::$app->request->post());
+                if (\Yii::$app->request->post('ChangePassword')) {
+                    $changePassword->load(\Yii::$app->request->post());
 
-                if ($changePassword->run()) {
-                    $this->user->logout();
-                    return $this->goLogin();
+                    if ($changePassword->run()) {
+                        $this->user->logout();
+                        return $this->goLogin();
+                    }
                 }
+            } catch (Exception $e) {
+                \Yii::$app->session->setFlash('error', $e->getMessage());
             }
         }
 
@@ -205,8 +209,7 @@ class AccountController extends \app\base\Controller {
             'tree' => $this->buildTree($position, $position->getChilds()
                 ->andWhere("level - {$position->level} < 4")
                 ->with(['user.status', 'user.invite'])
-                ->all()
-            ),
+                ->all())
         ]);
     }
 

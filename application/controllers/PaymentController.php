@@ -134,7 +134,7 @@ class PaymentController extends \app\base\Controller {
                 if ($parents = $this->user->position->getParents()->with(['user.payment', 'user.status'])->all()) {
                     $pay = 0;
 
-                    switch ($this->user->status->status) {
+                    switch ($invoice->userStatus) {
                         case 'RUBY' : $pay = 0.4; break;
                         case 'EMERALD' : $pay = 0.7; break;
                         case 'SAPPHIRE' : $pay = 1.2; break;
