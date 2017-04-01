@@ -36,7 +36,7 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
         ]) ?>
 
         <?php if ($registrationForm->inviteId && $registrationForm->parentInvite->userId == $registrationForm->inviteId) { ?>
-            <div class="form-group">
+            <div class="form-group sponsor">
                 <label class="control-label">Спонсор</label>
                 <p class="form-control-static"><?= $registrationForm->parentInvite->user->login ?></p>
             </div>
@@ -74,6 +74,7 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
             ])
         ?>
 
+      
         <div class="form-group text-center">
                 <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Register') ?></button>
         </div>

@@ -83,6 +83,11 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(UserPayment::className(), ['userId' => 'id']);
     }
 
+    // Activation relation
+    public function getActivation() {
+        return $this->hasOne(UserActivation::className(), ['userId' => 'id']);
+    }
+
     // Custom fields
     public function getFullname() {
         if ($this->firstname == $this->lastname) {
@@ -90,6 +95,14 @@ class User extends ActiveRecord implements IdentityInterface {
         }
 
         return $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function getName() {
+        if ($this->firstname) {
+            return $this->getFullname();
+        }
+
+        return $this->login;
     }
 
     // Photo
@@ -149,15 +162,19 @@ class User extends ActiveRecord implements IdentityInterface {
         }
 
         $status = $this->status;
+
+        if (!$this->position) {
+            $parentInvite = $this->invite->parent;
+            $parentInvite->count += 1;
+            if (!$parentInvite->save()) {
+                throw new Exception('Can not update parent invite');
+            };
+
+            $this->populateRelation('position', $parentInvite->user->position->append($this->id));
+        }
+
         $status->status = $invoice->userStatus;
         $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
-        /*
-        if ($status->active < date('Y-m-d H:i:s')) {
-            $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
-        } else {
-            $status->active = new \yii\db\Expression('DATE_ADD(active, INTERVAL 1 MONTH)');
-        }
-        */
 
         if (!$status->save()) {
             throw new Exception('Can not update UserStatus');
@@ -167,5 +184,9 @@ class User extends ActiveRecord implements IdentityInterface {
         if (!$this->payment->save()) {
             throw new Exception('Can not update payment');
         }
+    }
+
+    public function sendWelcomeMail() {
+
     }
 }

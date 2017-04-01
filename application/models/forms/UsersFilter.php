@@ -10,20 +10,22 @@ class UsersFilter extends \yii\base\Model {
     public $fullname;
     public $login;
     public $email;
+    public $inactive;
 
     public function rules() {
         return [
             [['id'], 'integer'],
             [['fullname'], 'string', 'max' => 50],
             [['login'], 'string', 'max' => 25],
-            [['email'], 'string', 'max' => 100]
+            [['email'], 'string', 'max' => 100],
+            [['inactive'], 'boolean']
         ];
     }
 
     public function getProvider() {
         $this->validate();
 
-        $query = User::find()->with(['status', 'invite.parentUser']);
+        $query = User::find()->joinWith('status')->with('status', 'invite.parentUser');
 
         if ($this->id && !$this->hasErrors('id')) {
             $query->andWhere(['id' => $this->id]);
@@ -39,6 +41,12 @@ class UsersFilter extends \yii\base\Model {
 
         if ($this->email && !$this->hasErrors('email')) {
             $query->andWhere(['like', 'email', $this->email]);
+        }
+
+        if ($this->inactive && !$this->hasErrors('inactive')) {
+            $query->andWhere('user_status.active < NOW()');
+        } else {
+            $query->andWhere('user_status.active > NOW()');
         }
 
         return new DataProvider([

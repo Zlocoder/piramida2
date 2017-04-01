@@ -27,7 +27,7 @@ class Invoice extends \app\base\ActiveRecord {
 
     // Custom fields
     public function getDescription() {
-        return "Оплата статуса ({$this->userStatus})";
+        return "Оплата статуса ({$this->userStatus}) пользователем ({$this->user->login})";
     }
 
     // Transaction relation

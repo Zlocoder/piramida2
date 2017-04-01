@@ -3,7 +3,6 @@
 	padding: 0;
 	width: 100%;
 	height: 100%;
-	margin-top: -1vw;
 	background: url("../images/back_cabinet.png") no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
@@ -158,6 +157,22 @@ a:hover,a:focus{
 	background-color:#030873;
 	
 }
+
+.best_users {
+    margin-top: 30px;
+    font-size: 1vw;
+}
+
+.best_users .levels {
+    text-align: center;
+    font-size: 1.5vw;
+}
+
+.best_users thead th {
+    text-align: center;
+    font-size: 1.1vw;
+}
+
 .m{
 	margin-top: 2.5vw;
 /*	display: flex;
@@ -222,7 +237,7 @@ a:hover,a:focus{
                  #ea607a -2px 2px 1px, #ea607a 2px -2px 1px;
 }
 .payStatus{
-	text-shadow: #223a9d 2px 2px 1px, #223a9d -2px -2px 1px, 
+	text-shadow: #223a9d 2px 2px 1px, #223a9d -2px -2px 1px,
                  #223a9d -2px 2px 1px, #223a9d 2px -2px 1px;
      color: #fff;
      font-size: 2.1vw;
@@ -303,4 +318,12 @@ a:hover,a:focus{
 	text-shadow: #223a9d 2px 2px 1px, #223a9d -2px -2px 1px,
 	#223a9d -2px 2px 1px, #223a9d 2px -2px 1px;
 	border-bottom:1px solid white;
+}
+.act{
+	text-shadow: #ea607a 2px 2px 1px, #ea607a -2px -2px 1px,
+	#ea607a -2px 2px 1px, #ea607a 2px -2px 1px;
+	color: white;
+	font-size: 2vw;
+	text-align: center;
+	background-color: #7882a7;
 }

@@ -35,23 +35,21 @@ class AccountController extends \app\base\Controller {
         return false;
     }
 
-
     public function actionIndex() {
         $time = \DateTime::createFromFormat('Y-m-d H:i:s', $this->user->status->active);
         $time = $time && ($time > date('Y-m-d H:i:s')) ? date_format($time, 'Y/m/d H:i:s') : null;
-
-        $childs = $this->account->position->childUsers->prepare(\Yii::$app->db->queryBuilder)->createCommand();
-        $sql = $childs->rawSql;
+        $position = $this->account->position;
 
         return $this->render('index', [
             'time' => $time,
             'account' => $this->account,
-            'childs' => $this->account->position->childUsers->all(),
+            'childs' => $position ? $position->childUsers->all() : [],
             'refLink' => $this->reflink,
             'counts' => $this->counts,
             'total_count' => User::find()->count(),
             'last_users' => User::find()->with('status')->orderBy(['created' => SORT_DESC])->limit(20)->all(),
             'top_users' => User::find()->joinWith('invite')->with('payment')->orderBy(['invite.count' => SORT_DESC])->limit(20)->all(),
+            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
             'countries' => require(\Yii::getAlias('@app/base/countries.php'))
         ]);
     }
@@ -72,14 +70,21 @@ class AccountController extends \app\base\Controller {
                     \Yii::$app->session->remove('inviteId');
                     \Yii::$app->session->remove('inviteDate');
 
-                    \Yii::$app->mailer->compose('welcome', [
+                    $check = \Yii::$app->mailer->compose('welcome', [
+                        'name' => $registrationForm->user->name,
                         'login' => $registrationForm->login,
                         'password' => $registrationForm->password,
-                        'sponsor' => $registrationForm->inviteId ? $registrationForm->parentInvite->user->login : null,
-                        'code' => $registrationForm->activation->code
+                        'sponsor' => $registrationForm->parentInvite->user->login
                     ])->setFrom(\Yii::$app->params['mailFrom'])
                         ->setTo($registrationForm->email)
                         ->setSubject('Welcome to DIAMOND REWARDS')
+                        ->send();
+
+                    $check = \Yii::$app->mailer->compose('activation', [
+                        'code' => $registrationForm->user->activation->code
+                    ])->setFrom(\Yii::$app->params['mailFrom'])
+                        ->setTo($registrationForm->email)
+                        ->setSubject('Activate your account')
                         ->send();
 
                     return \Yii::$app->user->login($registrationForm->user) ? $this->goAccount() : $this->goHome();
@@ -100,6 +105,7 @@ class AccountController extends \app\base\Controller {
             try {
                 if (\Yii::$app->request->post('EditProfile')) {
                     $editProfile->load(\Yii::$app->request->post());
+                    $editProfile->photo = UploadedFile::getInstance($editProfile, 'photo');
 
                     if ($editProfile->run()) {
                         return $this->goAccount();
@@ -123,16 +129,23 @@ class AccountController extends \app\base\Controller {
             'account' => $this->account,
             'refLink' => $this->reflink,
             'counts' => $this->counts,
+            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
             'model' => $editProfile
         ]);
     }
 
     public function actionOrder() {
+        if (!$this->user->active) {
+            return $this->goAccount();
+        }
+
         $userStatus = $this->user->status;
 
         $statusOptions = [];
         if ($userStatus) {
-            switch($userStatus->status) {
+            switch($userStatus->isActive ? $userStatus->status : 'RUBY') {
+                case 'TEST' :
+                    $statusOptions['TEST'] = 0.01;
                 case 'RUBY' :
                     $statusOptions['RUBY'] = 10;
                 case 'EMERALD' :
@@ -164,7 +177,8 @@ class AccountController extends \app\base\Controller {
             'options' => $statusOptions,
             'account' => $this->account,
             'refLink' => $this->reflink,
-            'counts' => $this->counts
+            'counts' => $this->counts,
+            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
         ]);
     }
 
@@ -173,7 +187,8 @@ class AccountController extends \app\base\Controller {
             'account' => $this->account,
             'refLink' => $this->reflink,
             'counts' => $this->counts,
-            'history' => $this->user->payment->getHistory()->with(['payment.user'])->all()
+            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
+            'history' => $this->user->payment->getHistory()->with(['invoice.user'])->all()
         ]);
     }
 
@@ -182,6 +197,7 @@ class AccountController extends \app\base\Controller {
             'account' => $this->account,
             'refLink' => $this->reflink,
             'counts' => $this->counts,
+            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
             'users' => $this->user->invite->getChilds()->with('user.position')->all()
         ]);
     }
@@ -206,6 +222,7 @@ class AccountController extends \app\base\Controller {
             'account' => $this->account,
             'refLink' => $this->reflink,
             'counts' => $this->counts,
+            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
             'tree' => $this->buildTree($position, $position->getChilds()
                 ->andWhere("level - {$position->level} < 4")
                 ->with(['user.status', 'user.invite'])
@@ -220,6 +237,17 @@ class AccountController extends \app\base\Controller {
             $user->save();
         }
 
-        return $this->redirect(['index']);
+        return $this->goAccount();
+    }
+
+    public function actionResendActivation() {
+        \Yii::$app->mailer->compose('activation', [
+            'code' => $this->account->activation->code
+        ])->setFrom(\Yii::$app->params['mailFrom'])
+            ->setTo($this->account->email)
+            ->setSubject('Activate your account')
+            ->send();
+
+        $this->goAccount();
     }
 }

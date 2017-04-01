@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\User;
 use app\models\forms\UsersFilter;
+use app\models\Position;
 use app\models\UserStatus;
 
 class AdminUsersController extends \app\base\AdminController {
@@ -14,6 +16,11 @@ class AdminUsersController extends \app\base\AdminController {
                         $status->active = new \yii\db\Expression('DATE_SUB(NOW(), INTERVAL 1 HOUR)');
                     } else {
                         $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+
+                        if (!Position::findOne(['userId' => $userId])) {
+                            $user = User::findOne($userId);
+                            $user->invite->parentUser->position->append($userId);
+                        }
                     }
 
                     $status->save();

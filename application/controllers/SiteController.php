@@ -5,9 +5,18 @@ namespace app\controllers;
 use app\models\forms\LoginForm;
 use app\models\User;
 use app\models\forms\ForgotPassword;
+use yii\captcha\CaptchaAction;
 
 class SiteController extends \app\base\Controller
 {
+    public function actions() {
+        return [
+            'captcha' => [
+                'class' => CaptchaAction::className()
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         return $this->render('/index');

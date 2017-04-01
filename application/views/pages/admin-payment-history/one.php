@@ -67,6 +67,11 @@
             ],
 
             [
+                'label' => 'status',
+                'value' => 'status'
+            ],
+
+            [
                 'label' => 'Type',
                 'value' => function($model) {
                     switch($this->params['history'][$model->receiverId]->type) {

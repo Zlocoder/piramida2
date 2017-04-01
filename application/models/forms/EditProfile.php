@@ -6,6 +6,7 @@ use app\models\User;
 use yii\base\Exception;
 
 class EditProfile extends \yii\base\Model {
+    public $photo;
     public $firstname;
     public $lastname;
     public $phone;
@@ -21,6 +22,12 @@ class EditProfile extends \yii\base\Model {
             [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/'],
             [['phone'], 'string', 'min' => 5, 'max' => 25],
             [['skype'], 'string', 'min' => 3, 'max' => 25],
+
+            [['photo'], 'image',
+                'mimeTypes' => 'image/png, image/jpeg, image/jpg',
+                'maxSize' => '204800',
+                'maxFiles' => 1
+            ],
         ];
     }
 
@@ -44,6 +51,10 @@ class EditProfile extends \yii\base\Model {
             if(!$this->_user->save()) {
                 throw new Exception('Can not save user');
             };
+
+            if ($this->photo) {
+                $this->_user->createPhoto($this->photo);
+            }
 
             $this->_user->payment->pmId = ucfirst($this->pmId);
             if (!$this->_user->payment->save()) {

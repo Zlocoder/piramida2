@@ -5,7 +5,8 @@ return [
     'user' => [
         'class' => 'app\components\User',
         'identityClass' => 'app\models\User',
-        'enableAutoLogin' => true
+        'enableAutoLogin' => false,
+        'authTimeout' => 600
     ],
     'mailer' => [
         'class' => 'yii\swiftmailer\Mailer',
@@ -13,8 +14,8 @@ return [
         'transport' => [
             'class' => 'Swift_SmtpTransport',
             'host' => 'smtp.gmail.com',
-            'username' => 'george.lemish@gmail.com',
-            'password' => 'dioralop19851013',
+            'username' => 'diamondrewards8@gmail.com', //xxxx@gmail.com
+            'password' => 'XYZdiamond_',
             'port' => '587',
             'encryption' => 'tls',
         ],

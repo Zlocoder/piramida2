@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use yii\base\Exception;
+
 class UserStatus extends \app\base\ActiveRecord {
     // ActiveRecord;
     public $timestamp = false;
@@ -12,7 +14,7 @@ class UserStatus extends \app\base\ActiveRecord {
 
     public function rules() {
         return [
-            [['userId', 'status', 'active'], 'required'],
+            [['userId', 'active'], 'required'],
 
             [['userId'], 'number'],
             [['status'], 'string', 'max' => 25],

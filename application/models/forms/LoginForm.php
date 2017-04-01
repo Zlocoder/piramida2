@@ -7,6 +7,7 @@ use app\models\User;
 class LoginForm extends \yii\base\Model {
     public $login;
     public $password;
+    public $captcha;
 
     private $_user;
 
@@ -14,6 +15,7 @@ class LoginForm extends \yii\base\Model {
         return [
             [['login', 'password'], 'required'],
             [['login', 'password'], 'string', 'min' => 3, 'max' => 25],
+            [['captcha'], 'captcha']
         ];
     }
 

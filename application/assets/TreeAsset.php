@@ -4,6 +4,7 @@ namespace app\assets;
 
 class TreeAsset extends \yii\web\AssetBundle {
     public $sourcePath = '@app/views/package';
+    public $baseUrl = '@web';
 
     public $css = [
         'css/tree.css'
@@ -14,6 +15,6 @@ class TreeAsset extends \yii\web\AssetBundle {
     ];
 
     public $depends = [
-        'app\assets\AppAsset'
+        'yii\web\YiiAsset',
     ];
 }

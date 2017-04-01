@@ -43,6 +43,7 @@ AdminAsset::register($this);
         'items' => [
             ['label' => 'Users', 'url' => \yii\helpers\Url::to(['admin-users/index'])],
             ['label' => 'Payment', 'url' => \yii\helpers\Url::to(['admin-payment-history/index'])],
+            ['label' => 'Tree', 'url' => \yii\helpers\Url::to(['admin-tree/index'])],
         ]
     ]) ?>
 

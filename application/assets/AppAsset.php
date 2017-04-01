@@ -19,12 +19,15 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/normalize.css',
+        'css/vegas.min.css',
         'css/style.css',
         'css/cabinet_style.css',
     ];
     public $js = [
         'js/jquery.countdown.min.js',
         'js/clipboard.min.js',
+        'js/vegas.min.js',
+        'js/main.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

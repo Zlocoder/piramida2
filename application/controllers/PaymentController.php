@@ -51,10 +51,12 @@ class PaymentController extends \app\base\Controller {
                 throw new Exception('Wrong session data');
             }
 
+            /*
             Invoice::deleteAll([
                 'userId' => $this->user->id,
                 'invoiceStatus' => 'created'
             ]);
+            */
 
             $invoice = new Invoice([
                 'userId' => $this->user->id,
@@ -70,7 +72,8 @@ class PaymentController extends \app\base\Controller {
 
             \Yii::$app->session->removeAllFlashes();
 
-            return $this->render('/test-payment', [
+            $this->layout = false;
+            return $this->render('/redirect-payment', [
                 'invoiceId' => $invoice->id,
                 'amount' => $invoice->amount,
                 'description' => $invoice->description,
@@ -90,6 +93,8 @@ class PaymentController extends \app\base\Controller {
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
+                $this->user->applyInvoice($invoice);
+
                 $now = new \yii\db\Expression('NOW()');
 
                 $transactionBatch = [];
@@ -210,8 +215,6 @@ class PaymentController extends \app\base\Controller {
                 if (!$invoice->save()) {
                     throw new Exception('Can not update Invoice');
                 }
-
-                $this->user->applyInvoice($invoice);
 
                 $adminPayment = UserPayment::findOne(1);
                 $adminPayment->earned += $invoice->amount - $accrual;

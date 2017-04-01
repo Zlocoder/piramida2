@@ -12,51 +12,67 @@ use yii\grid\ActionColumn;
 $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Users');
 
 $this->params['breadcrumbs'][] = ['label' => 'My cabinet'];
+
+$content = GridView::widget([
+    'filterModel' => $filter,
+    'dataProvider' => $provider,
+    'dataColumnClass' => 'app\base\DataColumn',
+    'columns' => [
+        [
+            'label' => 'active',
+            'value' => function($model) {
+                if ($model->status->isActive) {
+                    return \yii\bootstrap\Html::a('Выключить', '', [
+                        'data-user' => $model->id,
+                        'class' => 'btn btn-primary activity'
+                    ]);
+                } else {
+                    return \yii\bootstrap\Html::a('Включить', '', [
+                        'data-user' => $model->id,
+                        'class' => 'btn btn-default activity'
+                    ]);
+                }
+            },
+            'format' => 'raw'
+        ],
+        [
+            'attribute' => 'id',
+            'filter' => false
+        ],
+        'login',
+        'fullname',
+        [
+            'label' => 'Invited by',
+            'value' => 'invite.parentUser.login'
+        ],
+        [
+            'attribute' => 'invite',
+            'label' => \Yii::t('app', 'Invited count'),
+            'value' => 'invite.count'
+        ],
+        'created',
+    ]
+]);
 ?>
 
 <div class="row">
     <h1><?= \Yii::t('app', 'Users') ?></h1>
 
-    <?= GridView::widget([
-        'filterModel' => $filter,
-        'dataProvider' => $provider,
-        'dataColumnClass' => 'app\base\DataColumn',
-        'columns' => [
+    <?= \yii\bootstrap\Tabs::widget([
+        'items' => [
             [
-                'label' => 'active',
-                'value' => function($model) {
-                    if ($model->status->isActive) {
-                        return \yii\bootstrap\Html::a('Выключить', '', [
-                            'data-user' => $model->id,
-                            'class' => 'btn btn-primary activity'
-                        ]);
-                    } else {
-                        return \yii\bootstrap\Html::a('Включить', '', [
-                            'data-user' => $model->id,
-                            'class' => 'btn btn-default activity'
-                        ]);
-                    }
-                },
-                'format' => 'raw'
+                'label' => 'Активные',
+                'active' => $filter->inactive ? false : true,
+                'url' => \yii\helpers\Url::to(['admin-users/index']),
+                'content' => $filter->inactive ? null : $content
             ],
+
             [
-                'attribute' => 'id',
-                'filter' => false
+                'label' => 'Не активные',
+                'active' => $filter->inactive ? true : false,
+                'url' => \yii\helpers\Url::to(['admin-users/index', 'UsersFilter' => ['inactive' => true]]),
+                'content' => $filter->inactive ? $content : null
             ],
-            'login',
-            [
-                'label' => 'Invited by',
-                'value' => 'invite.parentUser.login'
-            ],
-            [
-                'attribute' => 'invite',
-                'label' => \Yii::t('app', 'Invited count'),
-                'value' => 'invite.count'
-            ],
-            'created',
-            [
-                'class' => ActionColumn::className()
-            ]
         ]
     ]) ?>
 </div>

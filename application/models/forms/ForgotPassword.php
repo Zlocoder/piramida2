@@ -34,6 +34,9 @@ class ForgotPassword extends \yii\base\Model {
                 $this->_user = User::findOne(['login' => $this->login]);
                 $newPassword = \Yii::$app->security->generateRandomString(8);
                 $this->_user->password = \Yii::$app->security->generatePasswordHash($newPassword);
+                if (!$this->_user->save()) {
+                    throw new Exception('Can not update user password');
+                };
 
                 return $newPassword;
             }
@@ -42,6 +45,9 @@ class ForgotPassword extends \yii\base\Model {
                 $this->_user = User::findOne(['email' => $this->email]);
                 $newPassword = \Yii::$app->security->generateRandomString(8);
                 $this->_user->password = \Yii::$app->security->generatePasswordHash($newPassword);
+                if (!$this->_user->save()) {
+                    throw new Exception('Can not update user password');
+                };
 
                 return $newPassword;
             }

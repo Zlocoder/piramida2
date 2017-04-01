@@ -89,10 +89,10 @@ class RegistrationForm extends \yii\base\Model {
             try {
                 $this->createUser();
                 $this->createActivation();
-                $this->createInvite();
-                $this->createPosition();
                 $this->createPayment();
+                $this->createInvite();
                 $this->createStatus();
+                //$this->createPosition();
 
                 $transaction->commit();
             } catch (Exception $e) {
@@ -157,11 +157,6 @@ class RegistrationForm extends \yii\base\Model {
             throw new Exception('Can not create Invite');
         }
 
-        $this->parentInvite->count += 1;
-        if (!$this->parentInvite->save()) {
-            throw new Exception('Can not update parent Invite');
-        }
-
         $this->_userInvite = $invite;
     }
 
@@ -185,7 +180,7 @@ class RegistrationForm extends \yii\base\Model {
     private function createStatus() {
         $status = new UserStatus([
             'userId' => $this->_user->id,
-            'status' => 'RUBY',
+            'status' => '',
             'active' => new \yii\db\Expression('NOW()')
         ]);
 
