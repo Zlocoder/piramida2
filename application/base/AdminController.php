@@ -12,7 +12,7 @@ class AdminController extends \yii\web\Controller {
     public function behaviors()
     {
         return [
-            //'access' => 'app\components\AdminAccessControl'
+            'access' => 'app\components\AdminAccessControl'
         ];
     }
 }

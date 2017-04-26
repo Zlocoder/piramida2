@@ -30,21 +30,23 @@ $this->params['section_class'] = 'cabinet';
                 <div class="col-sm-6 m">
                     <div class="timer">
                         <img src="/images/clock.png" alt="">
-                        <div class="timeLeft" id="countdown">00:00:00</div>
-<!--                        --><?php //if ($time) { ?>
-<!--                            <div class="timeLeft" id="countdown">00:00:00</div>-->
-<!--                            --><?php //$this->registerJs("
-//                                $('#countdown').countdown('" . $time . "', function(event) {
-//                                    $(this).html(event.strftime('%D дней %H:%M:%S'));
-//                                });
-//                            "); ?>
-<!--                        --><?php //} else { ?>
-<!--                            <div class="timeLeft">00:00:00</div>-->
-<!--                        --><?php //} ?>
+<!--                        <div class="timeLeft" id="countdown">00:00:00</div>-->
+                        <?php if ($time) { ?>
+                            <div class="timeLeft" id="countdown">00:00:00</div>
+                            <?php $this->registerJs("
+                                $('#countdown').countdown('" . $time . "', function(event) {
+                                    $(this).html(event.strftime('%D дней %H:%M:%S'));
+                                });
+                            "); ?>
+                        <?php } else { ?>
+                            <div class="timeLeft">00:00:00</div>
+                        <?php } ?>
                     </div>
                     <div class="status">
                         <a href="#"><img src="/images/bril.png" alt=""></a>
-                        <div class="payStatus"><a href="/account/order">оплатить статус</a></div>
+<!--                        <div class="payStatus"><a href="/account/order">оплатить статус</a></div>-->
+<!--                    </div>-->
+                        <div class="payStatus"><a href="#">оплатить статус</a></div>
                     </div>
                 </div>
 

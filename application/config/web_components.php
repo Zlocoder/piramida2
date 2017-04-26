@@ -6,7 +6,7 @@ return [
         'class' => 'app\components\User',
         'identityClass' => 'app\models\User',
         'enableAutoLogin' => false,
-        'authTimeout' => 600
+	'authTimeout' => 600
     ],
     'mailer' => [
         'class' => 'yii\swiftmailer\Mailer',
@@ -14,8 +14,8 @@ return [
         'transport' => [
             'class' => 'Swift_SmtpTransport',
             'host' => 'smtp.gmail.com',
-            'username' => 'diamondrewards8@gmail.com', //xxxx@gmail.com
-            'password' => 'XYZdiamond_',
+            'username' => 'siamondrewards@gmail.com', //xxxx@gmail.com
+            'password' => 'diamondrewards123',
             'port' => '587',
             'encryption' => 'tls',
         ],
@@ -27,7 +27,7 @@ return [
         'enablePrettyUrl' => true,
         'showScriptName' => false,
         'rules' => [
-            'site/invite/?inviteId=KLlwrH4i92' => 'site/invite/?inviteId=Diamond'
+            'site/invite/?inviteId=KLlwrH4i92' => 'site/invite/?inviteId=Diamondlady'
         ],
     ],
     'request' => [

@@ -37,6 +37,7 @@ AppAsset::register($this);
                 <div class="col-sm-6 logo">
                     <a href="/"><img src="/images/logo.png" alt=""></a>
                 </div>
+
                 <div class="col-sm-2 col-sm-offset-2 translator">
                     <!--
                                     <select name="gt" id="">
@@ -52,8 +53,9 @@ AppAsset::register($this);
                     </script>
                     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
                 </div>
+
                 <div class="col-sm-2 hi" style="text-align: left;">
-                    <a href="/"><div class="lc">Личный кабинет</div></a>
+                    <a href="https://diamondrewards.biz/account/index"><div class="lc">Личный кабинет</div></a>
                     <div>Добро пожаловать,</div>
                     <div class="who vip" style="font-size: 2vw;"><?= \Yii::$app->user->fullname ?></div>
                 </div>
@@ -67,12 +69,6 @@ AppAsset::register($this);
                         <a href="/"><img src="/images/logo.png" alt=""></a>
                     </div>
                     <div class="col-sm-2 col-sm-offset-2 translator">
-                        <!--
-                                        <select name="gt" id="">
-                                            <option value="1">rus</option>
-                                            <option value="2">eng</option>
-                                        </select>
-                        -->
                         <div id="google_translate_element"></div>
                         <script type="text/javascript">
                             function googleTranslateElementInit() {
@@ -96,7 +92,13 @@ AppAsset::register($this);
                     <ul>
                         <?php foreach ($this->params['mainNav'] as $link) { ?>
                             <div class="col-sm-2">
-                                <div class="paral"><a href="<?= $link['url'] ?>"><li><?= $link['label'] ?></li></a></div>
+                                <div class="paral"
+                                    <?php if ($link['label']=='Новости') { ?>
+                                        style="box-shadow:  -0.04vw -0.04vw 0.3vw 0.3vw #e4b632;"
+                                    <?php } ?>
+                                >
+                                    <a href="<?= $link['url'] ?>"><li><?= $link['label'] ?></li></a></div>
+
                             </div>
                         <?php } ?>
                     </ul>
@@ -124,6 +126,43 @@ AppAsset::register($this);
     </footer>
     -->
 
+
+
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44086169 = new Ya.Metrika({
+                    id:44086169,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true,
+                    trackHash:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44086169" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+
+
+
 <?php $this->endBody() ?>
 <!-- BEGIN JIVOSITE CODE {literal} -->
 <script type='text/javascript'>
@@ -131,6 +170,7 @@ AppAsset::register($this);
         var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
 <!-- {/literal} END JIVOSITE CODE -->
 </body>
+
 </html>
 <?php $this->endPage() ?>
 

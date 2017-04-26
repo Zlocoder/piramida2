@@ -76,22 +76,26 @@ a:hover,a:focus{
 
 .paral a:hover{
 	color: #d0b156;
+
+}
+.paral a:hover .paral{
+	box-shadow:  -0.02vw -0.02vw 0.15vw 0.15vw #d0b156;
 }
 .paral a:focus{
 	color: #d0b156;
 }
 .text-center{
-	padding:10px 0;
-	margin-top: 20px;
+	padding:0 0 10px;
 	font-weight: bold;
 	font-family: 'Lobster', cursive;
 }
 .color_gold{
+	margin-top: -1vw;
 	color: #e4b632;
 	text-shadow: black 2px 2px 1px, black -2px -2px 1px,
 	black -2px 2px 1px, black 2px -2px 1px;
 	letter-spacing:0.3vw;
-	font-size: 3vw;
+	font-size: 2.1vw;
 	background: transparent;
 }
 .gradient-border {
@@ -142,4 +146,10 @@ a:hover,a:focus{
 	font-size: 1.7vw;
 
 	text-shadow: none;
+}
+.video{
+	padding: 5vw;
+	margin: 0 auto;
+	width: 80%;
+	border-bottom:2px solid grey;
 }

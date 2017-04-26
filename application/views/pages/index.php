@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'Diamond reward';
+$this->title = 'Diamondrewards';
 ?>
 
 <div class="col-lg-10 col-lg-offset-1" style="padding-top: 10px; padding-bottom: 10px; margin-top: 20px;">
@@ -15,7 +15,7 @@ $this->title = 'Diamond reward';
     <?php } ?>
 </div>
 
-<div class="col-lg-10 col-lg-offset-1 text-center color_gold" style="padding-top: 10px; padding-bottom: 10px; margin-top: 20px;">
+<div class="col-lg-10 col-lg-offset-1 text-center color_gold" style="padding-bottom: 10px;">
     <p>
         Чтобы достигнуть успеха,
         нужно приложить усилия
