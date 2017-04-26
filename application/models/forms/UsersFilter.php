@@ -44,16 +44,35 @@ class UsersFilter extends \yii\base\Model {
         }
 
         if ($this->inactive && !$this->hasErrors('inactive')) {
+            $query->andWhere([
+                'or',
+                "user_status.status IS NULL",
+                [
+                    'and',
+                    "user_status.status = 'DIAMOND'",
+                    'user_status.active < NOW()'
+                ]
+            ]);
             $query->andWhere('user_status.active < NOW()');
         } else {
-            $query->andWhere('user_status.active > NOW()');
+            $query->andWhere([
+                'or',
+                "user_status.status = 'RUBY'",
+                "user_status.status = 'EMERALD'",
+                "user_status.status = 'SAPPHIRE'",
+                [
+                    'and',
+                    "user_status.status = 'DIAMOND'",
+                    'user_status.active > NOW()'
+                ]
+            ]);
         }
 
         return new DataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSizeParam' => false,
-                'pageSize' => 10
+                'pageSize' => 20
             ],
             'sort' => [
                 'defaultOrder' => [

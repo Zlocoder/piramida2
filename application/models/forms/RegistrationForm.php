@@ -25,6 +25,7 @@ class RegistrationForm extends \yii\base\Model {
     public $skype;
     public $country;
     public $agree;
+    public $captcha;
 
     public $inviteDate;
 
@@ -38,34 +39,68 @@ class RegistrationForm extends \yii\base\Model {
 
     public function rules() {
         return [
-            [['login', 'email', 'password', 'confirm', 'inviteDate', 'pmId', 'country', 'agree'], 'required'],
+            [['login', 'email', 'password', 'confirm', 'inviteDate', 'pmId', 'country', 'agree'], 'required',
+                'message' => 'Введите {attribute}'
+            ],
 
-            [['firstname', 'lastname', 'login', 'password', 'skype'], 'string', 'min' => 3, 'max' => 25],
-            [['login', 'skype', 'password'], 'match', 'pattern' => '/^[^ ]{3,25}$/'],
-            [['phone'], 'string', 'min' => 5, 'max' => 25],
+            [['firstname', 'lastname', 'login', 'password', 'skype'], 'string', 'min' => 3, 'max' => 25,
+                'tooShort' => '{attribute} не может быть меньше 3 символов',
+                'tooLong' => '{attribute} не может быть больше 25 символов'
+            ],
+
+            [['login', 'skype', 'password'], 'match', 'pattern' => '/^[^ ]{3,25}$/',
+                'message' => '{attribute} не может содержать пробелы'
+            ],
+
+            [['phone'], 'string', 'min' => 5, 'max' => 25,
+                'tooShort' => '{attribute} не может быть меньше 5 символов',
+                'tooLong' => '{attribute} не может быть больше 25 символов'
+            ],
+
             [['pmId'], 'string', 'max' => 25],
-            [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/'],
-            [['email'], 'string', 'max' => 100],
-            [['email'], 'email'],
-            [['inviteDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
-            [['agree'], 'boolean'],
-            [['agree'], 'compare', 'compareValue' => true, 'message' => 'You must argee.'],
+            [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/', 'message' => 'Номер кошелька должен быть в формате "Uxxxxxx"'],
 
-            [['confirm'], 'compare', 'compareAttribute' => 'password'],
+            [['email'], 'string', 'max' => 100],
+            [['email'], 'email', 'message' => 'Некорректный Email'],
+
+            [['inviteDate'], 'date', 'format' => 'php:Y-m-d H:i:s'],
+
+            [['agree'], 'boolean'],
+            [['agree'], 'compare', 'compareValue' => true, 'message' => 'Вы должны согласиться.'],
+
+            [['confirm'], 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
 
             [['photo'], 'image',
                 'mimeTypes' => 'image/png, image/jpeg, image/jpg',
                 'maxSize' => '204800',
-                'maxFiles' => 1
+                'maxFiles' => 1,
+                'message' => 'Ошибка загрузки файла',
+                'notImage' => 'загруженный файл не является изображением',
+                'tooBig' => 'Максимальный размер файла не должен превышать 200 Kb',
+                'tooMany' => 'Нельзя загружать более 1 картинки',
+                'wrongMimeType' => 'Непотдерживаемый формат файла'
             ],
 
-            [['login', 'email'], 'unique', 'targetClass' => User::className()]
+            [['login', 'email'], 'unique', 'targetClass' => User::className(), 'message' => 'Такой {attribute} уже зарегистрирован'],
+
+            [['captcha'], 'captcha', 'message' => 'Неверный код']
         ];
     }
 
     public function attributeLabels() {
         return [
-            'pmId' => 'Prefect Money',
+            'firstname' => 'Имя',
+            'lastname' => 'Фамилия',
+            'login' => 'Логин',
+            'email' => 'Email',
+            'password' => 'Пароль',
+            'confirm' => 'Подтверждение пароля',
+            'photo' => 'Фото',
+            'pmId' => 'Кошелек Prefect Money',
+            'phone' => 'Телефон',
+            'skype' => 'Скайп',
+            'country' => 'Страна',
+            'captcha' => 'Введите код с картинки'
         ];
     }
 
@@ -91,7 +126,7 @@ class RegistrationForm extends \yii\base\Model {
                 $this->createActivation();
                 $this->createPayment();
                 $this->createInvite();
-                $this->createStatus();
+                //$this->createStatus();
                 //$this->createPosition();
 
                 $transaction->commit();
@@ -214,6 +249,6 @@ class RegistrationForm extends \yii\base\Model {
     }
 
     public function getIsParentAdmin() {
-        return $this->parentInvite->userId == 1;
+        return $this->inviteId ? ($this->inviteId == 1) : true;
     }
 }

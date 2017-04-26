@@ -12,7 +12,8 @@ class SiteController extends \app\base\Controller
     public function actions() {
         return [
             'captcha' => [
-                'class' => CaptchaAction::className()
+                'class' => CaptchaAction::className(),
+                'transparent' => true
             ]
         ];
     }
@@ -50,7 +51,7 @@ class SiteController extends \app\base\Controller
 
         if (!\Yii::$app->session->has('inviteId')) {
             $user = User::findOne(['login' => $inviteId]);
-            if ($user && $user->status->isActive && $user->invite) {
+            if ($user && $user->active && $user->status->isActive && $user->invite) {
                 \Yii::$app->session->set('inviteId', $user->id);
                 \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
             }
@@ -97,10 +98,12 @@ class SiteController extends \app\base\Controller
         if (\Yii::$app->request->isPost) {
             $forgotModel->load(\Yii::$app->request->post());
 
+            /*
             if (strpos($forgotModel->login, '@')) {
                 $forgotModel->email = $forgotModel->login;
                 $forgotModel->login = null;
             }
+            */
 
             if ($newPassword = $forgotModel->newPassword) {
                 \Yii::$app->mailer->compose('new-password', [

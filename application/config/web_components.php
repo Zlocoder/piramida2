@@ -27,6 +27,7 @@ return [
         'enablePrettyUrl' => true,
         'showScriptName' => false,
         'rules' => [
+            'site/invite/?inviteId=KLlwrH4i92' => 'site/invite/?inviteId=Diamond'
         ],
     ],
     'request' => [

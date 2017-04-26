@@ -17,17 +17,38 @@ class EditProfile extends \yii\base\Model {
 
     public function rules() {
         return [
-            [['pmId'], 'required'],
-            [['pmId', 'firstname', 'lastname'], 'string', 'max' => 25],
-            [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/'],
-            [['phone'], 'string', 'min' => 5, 'max' => 25],
-            [['skype'], 'string', 'min' => 3, 'max' => 25],
+            [['pmId'], 'required', 'message' => 'Введите свой кошелек Perfect Money'],
+            [['pmId', 'firstname', 'lastname'], 'string', 'max' => 25, 'message' => '{attribute} не может быть больше 25 символов'],
+            [['pmId'], 'match', 'pattern' => '/^[Uu]\d+$/', 'message' => 'Номер кошелька должен быть в формате "Uxxxxxx"'],
+            [['phone'], 'string', 'min' => 5, 'max' => 25,
+                'tooShort' => 'Телефон не может быть менее 5 символов',
+                'tooLong' => 'Телефон не может быть более 25 символов',
+            ],
+            [['skype'], 'string', 'min' => 3, 'max' => 25,
+                'tooShort' => 'Скайп не может быть менее 3 символов',
+                'tooLong' => 'Скайп не может быть более 25 символов',
+            ],
 
             [['photo'], 'image',
                 'mimeTypes' => 'image/png, image/jpeg, image/jpg',
                 'maxSize' => '204800',
-                'maxFiles' => 1
+                'maxFiles' => 1,
+                'message' => 'Ошибка загрузки файла',
+                'notImage' => 'загруженный файл не является изображением',
+                'tooBig' => 'Максимальный размер файла не должен превышать 200 Kb',
+                'tooMany' => 'Нельзя загружать более 1 картинки',
+                'wrongMimeType' => 'Непотдерживаемый формат файла'
             ],
+        ];
+    }
+
+    public function attributeLabels() {
+        return [
+            'photo' => 'Фото',
+            'firstname' => 'Имя',
+            'lastname' => 'Фамилия',
+            'phone' => 'Скайп',
+            'pmId' => 'Кошелек Perfect Money'
         ];
     }
 

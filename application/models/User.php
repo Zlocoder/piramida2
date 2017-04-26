@@ -161,9 +161,21 @@ class User extends ActiveRecord implements IdentityInterface {
             return false;
         }
 
-        $status = $this->status;
+        if ($this->status) {
+            $this->status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+        } else {
+            $status = new UserStatus([
+                'userId' => $this->_user->id,
+                'status' => UserStatus::STATUS_RUBY,
+                'active' => new \yii\db\Expression('NOW()')
+            ]);
 
-        if (!$this->position) {
+            if (!$status->save()) {
+                throw new Exception('Can not save UserStatus');
+            }
+
+            $this->populateRelation('status', $status);
+
             $parentInvite = $this->invite->parent;
             $parentInvite->count += 1;
             if (!$parentInvite->save()) {
@@ -173,20 +185,9 @@ class User extends ActiveRecord implements IdentityInterface {
             $this->populateRelation('position', $parentInvite->user->position->append($this->id));
         }
 
-        $status->status = $invoice->userStatus;
-        $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
-
-        if (!$status->save()) {
-            throw new Exception('Can not update UserStatus');
-        };
-
         $this->payment->payed += $invoice->amount;
         if (!$this->payment->save()) {
             throw new Exception('Can not update payment');
         }
-    }
-
-    public function sendWelcomeMail() {
-
     }
 }

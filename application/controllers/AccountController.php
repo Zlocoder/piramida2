@@ -8,6 +8,9 @@ use app\models\forms\RegistrationForm;
 use app\models\Position;
 use app\models\User;
 use app\models\UserActivation;
+use app\models\UserPayment;
+use app\models\UserStatus;
+use yii\captcha\CaptchaAction;
 use yii\web\UploadedFile;
 use yii\base\Exception;
 
@@ -35,9 +38,23 @@ class AccountController extends \app\base\Controller {
         return false;
     }
 
+    public function actions() {
+        return [
+            'captcha' => [
+                'class' => CaptchaAction::className(),
+                'transparent' => true
+            ]
+        ];
+    }
+
     public function actionIndex() {
-        $time = \DateTime::createFromFormat('Y-m-d H:i:s', $this->user->status->active);
-        $time = $time && ($time > date('Y-m-d H:i:s')) ? date_format($time, 'Y/m/d H:i:s') : null;
+        $time = null;
+
+        if ($this->user->status && $this->user->status->status == UserStatus::STATUS_DIAMOND) {
+            $time = \DateTime::createFromFormat('Y-m-d H:i:s', $this->user->status->active);
+            $time = $time && ($time > date('Y-m-d H:i:s')) ? date_format($time, 'Y/m/d H:i:s') : null;
+        }
+
         $position = $this->account->position;
 
         return $this->render('index', [
@@ -70,7 +87,7 @@ class AccountController extends \app\base\Controller {
                     \Yii::$app->session->remove('inviteId');
                     \Yii::$app->session->remove('inviteDate');
 
-                    $check = \Yii::$app->mailer->compose('welcome', [
+                    \Yii::$app->mailer->compose('welcome', [
                         'name' => $registrationForm->user->name,
                         'login' => $registrationForm->login,
                         'password' => $registrationForm->password,
@@ -80,7 +97,7 @@ class AccountController extends \app\base\Controller {
                         ->setSubject('Welcome to DIAMOND REWARDS')
                         ->send();
 
-                    $check = \Yii::$app->mailer->compose('activation', [
+                    \Yii::$app->mailer->compose('activation', [
                         'code' => $registrationForm->user->activation->code
                     ])->setFrom(\Yii::$app->params['mailFrom'])
                         ->setTo($registrationForm->email)
@@ -139,47 +156,21 @@ class AccountController extends \app\base\Controller {
             return $this->goAccount();
         }
 
-        $userStatus = $this->user->status;
-
-        $statusOptions = [];
-        if ($userStatus) {
-            switch($userStatus->isActive ? $userStatus->status : 'RUBY') {
-                case 'TEST' :
-                    $statusOptions['TEST'] = 0.01;
-                case 'RUBY' :
-                    $statusOptions['RUBY'] = 10;
-                case 'EMERALD' :
-                    $statusOptions['EMERALD'] = 25;
-                case 'SAPHIRE' :
-                    $statusOptions['SAPPHIRE'] = 50;
-                case 'DIAMOND' :
-                    $statusOptions['DIAMOND'] = 100;
+        if ($this->user->status) {
+            if ($this->user->status->status == UserStatus::STATUS_DIAMOND) {
+                \Yii::$app->session->setFlash('orderStatus', UserStatus::STATUS_DIAMOND);
+                \Yii::$app->session->setFlash('orderAmount', UserPayment::AMOUNT_DIAMOND);
+            } else {
+                return $this->goAccount();
             }
         } else {
-            $statusOptions['RUBY'] = 10;
-            $statusOptions['EMERALD'] = 25;
-            $statusOptions['SAPPHIRE'] = 50;
-            $statusOptions['DIAMOND'] = 100;
+            \Yii::$app->session->setFlash('orderStatus', UserStatus::STATUS_RUBY);
+            \Yii::$app->session->setFlash('orderAmount', UserPayment::AMOUNT_RUBY);
         }
 
-        if (\Yii::$app->request->isPost) {
-            $postStatus = \Yii::$app->request->post('status');
-            if (array_key_exists($postStatus, $statusOptions) && $statusOptions[$postStatus] >= $statusOptions[$userStatus->status]) {
-                \Yii::$app->session->setFlash('orderStatus', $postStatus);
-                \Yii::$app->session->setFlash('orderAmount', $statusOptions[$postStatus]);
-                \Yii::$app->session->setFlash('orderUserId', $this->user->id);
+        \Yii::$app->session->setFlash('orderUserId', $this->user->id);
 
-                return $this->redirect(['payment/index']);
-            }
-        }
-
-        return $this->render('order-status', [
-            'options' => $statusOptions,
-            'account' => $this->account,
-            'refLink' => $this->reflink,
-            'counts' => $this->counts,
-            'bestUsers' => User::find()->joinWith('invite')->with('invite', 'position')->orderBy(['invite.count' => SORT_DESC])->limit(15)->all(),
-        ]);
+        return $this->redirect(['payment/index']);
     }
 
     public function actionPaymentHistory() {

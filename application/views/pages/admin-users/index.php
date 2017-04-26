@@ -21,7 +21,7 @@ $content = GridView::widget([
         [
             'label' => 'active',
             'value' => function($model) {
-                if ($model->status->isActive) {
+                if ($model->status && $model->status->isActive) {
                     return \yii\bootstrap\Html::a('Выключить', '', [
                         'data-user' => $model->id,
                         'class' => 'btn btn-primary activity'

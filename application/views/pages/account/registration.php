@@ -15,7 +15,7 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 
 <div class="row">
     <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.65); margin-top: 20px;">
-        <h1 class="text-center"><?= \Yii::t('app', 'Registration') ?></h1>
+        <h1 class="text-center">Регистрация</h1>
 
         <?php $form = ActiveForm::begin([
             'options' => [
@@ -30,12 +30,13 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
                 'showUpload' => false,
                 'browseClass' => 'btn btn-primary btn-block',
                 'browseIcon' => '<i class="glyphicon glyphicon-camera"></i>',
-                'browseLabel' =>  'Select Photo'
+                'browseLabel' =>  'Выбрать фото'
             ],
             'options' => ['accept' => 'image/jpg, image/png, image/jpeg']
         ]) ?>
 
-        <?php if ($registrationForm->inviteId && $registrationForm->parentInvite->userId == $registrationForm->inviteId) { ?>
+        <?php /* if ($registrationForm->inviteId && $registrationForm->parentInvite->userId == $registrationForm->inviteId) { */ ?>
+        <?php if (!$registrationForm->isParentAdmin) { ?>
             <div class="form-group sponsor">
                 <label class="control-label">Спонсор</label>
                 <p class="form-control-static"><?= $registrationForm->parentInvite->user->login ?></p>
@@ -51,7 +52,7 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
         <?= $form->field($registrationForm, 'email') ?>
 
         <?= $form->field($registrationForm, 'country')->dropDownList(require Yii::getAlias('@app/base/countries.php'), [
-            'prompt' => 'Choose country...'
+            'prompt' => 'Выберите страну...'
         ]) ?>
 
         <?= $form->field($registrationForm, 'phone') ?>
@@ -64,19 +65,25 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 
         <?= $form->field($registrationForm, 'confirm')->passwordInput() ?>
 
+        <?= $form->field($registrationForm, 'captcha')->widget(\yii\captcha\Captcha::className(), [
+            'options' => [
+                'class' => 'form-control',
+            ],
+            'template' => '<div class="row"><div class="col-sm-8">{input}</div> <div class="col-sm-4" style="margin-top: -8px;">{image}</div></div>'
+        ]) ?>
+
         <?= $form->field($registrationForm, 'agree')
             ->checkbox([
-                'label' => '<b>I agree with ' . Html::a(
-                    'terms and conditions',
+                'label' => '<b>Я согласен с ' . Html::a(
+                    'условиями и соглашениями',
                     Url::to(['site/terms-and-conditions']),
                     ['target' => '_blank', 'style' => 'color: #337ab7;']
                 ) . '</b>'
             ])
         ?>
 
-      
         <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Register') ?></button>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
         </div>
 
         <?php ActiveForm::end(); ?>

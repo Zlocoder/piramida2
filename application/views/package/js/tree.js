@@ -1,13 +1,16 @@
+/*
 $(function () {
-    $('.tree-item').each(function(index) {
-        var $treeItem = $(this);
-        var $tree = $(this).parent().parent();
+    $('.tree').each(function(index) {
+        var $tree = $(this);
         if ($tree.find('.tree-left .tree').length) {
-            $treeItem.append($('<div id="arrow-left-' + index + '" class="arrow arrow-left">'));
+            $tree.append($('<div class="arrow-wrapper"><div class="arrow arrow-left" /></div>'));
         }
 
         if ($tree.find('.tree-right .tree').length) {
-            $treeItem.append($('<div id="arrow-right-' + index + '" class="arrow arrow-right">'));
+            $tree.append($('<div class="arrow-wrapper"><div class="arrow arrow-right" /></div>'));
         }
     })
 });
+
+//  id="arrow-left-' + index + '"
+*/

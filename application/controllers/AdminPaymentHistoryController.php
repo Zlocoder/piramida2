@@ -63,7 +63,7 @@ class AdminPaymentHistoryController extends \app\base\AdminController {
                     $pay = 0;
 
                     switch ($invoice->userStatus) {
-                        case 'RUBY' : $pay = 0.4; break;
+                        case UserStatus::STATUS_RUBY : $pay = 0.4; break;
                         case 'EMERALD' : $pay = 0.7; break;
                         case 'SAPPHIRE' : $pay = 1.2; break;
                         case 'DIAMOND' : $pay = 3; break;
@@ -81,7 +81,7 @@ class AdminPaymentHistoryController extends \app\base\AdminController {
 
                         $maxLevel = 0;
                         switch ($parent->user->status->status) {
-                            case 'RUBY' : $maxLevel = 5; break;
+                            case UserStatus::STATUS_RUBY : $maxLevel = 5; break;
                             case 'EMERALD' : $maxLevel = 10; break;
                             case 'SAPPHIRE' : $maxLevel = 15; break;
                             case 'DIAMOND' : $maxLevel = 21; break;

@@ -11,10 +11,14 @@ class ChangePassword extends \yii\base\Model {
 
     public function rules() {
         return [
-            [['oldPassword', 'newPassword', 'confirm'], 'required'],
+            [['oldPassword', 'newPassword', 'confirm'], 'required', 'message' => 'Введите {attribute}'],
 
-            [['oldPassword', 'newPassword', 'confirm'], 'string', 'min' => 3, 'max' => 25],
-            [['confirm'], 'compare', 'compareAttribute' => 'newPassword'],
+            [['oldPassword', 'newPassword', 'confirm'], 'string', 'min' => 3, 'max' => 25,
+                'tooShort' => '{attribute} не может быть менее 3 символов',
+                'tooLong' => '{attribute} не может быть более 25 символов',
+            ],
+
+            [['confirm'], 'compare', 'compareAttribute' => 'newPassword', ],
 
             [['oldPassword'], 'validateOldPassword'],
         ];

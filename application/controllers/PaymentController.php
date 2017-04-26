@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Invoice;
 use app\models\Transaction;
 use app\models\UserPayment;
+use app\models\UserStatus;
 use yiidreamteam\perfectmoney\actions\ResultAction;
 use yiidreamteam\perfectmoney\events\GatewayEvent;
 use yii\helpers\ArrayHelper;
@@ -51,18 +52,11 @@ class PaymentController extends \app\base\Controller {
                 throw new Exception('Wrong session data');
             }
 
-            /*
-            Invoice::deleteAll([
-                'userId' => $this->user->id,
-                'invoiceStatus' => 'created'
-            ]);
-            */
-
             $invoice = new Invoice([
                 'userId' => $this->user->id,
-                'userStatus' => \Yii::$app->session->get('orderStatus'),
+                'userStatus' => \Yii::$app->session->getFlash('orderStatus'),
                 'invoiceStatus' => 'created',
-                'amount' => \Yii::$app->session->get('orderAmount'),
+                'amount' => \Yii::$app->session->getFlash('orderAmount'),
                 'accrual' => 0
             ]);
 
@@ -83,7 +77,6 @@ class PaymentController extends \app\base\Controller {
 
             return $this->redirect(['account/order']);
         }
-
     }
 
     public function actionSuccess() {
@@ -96,84 +89,75 @@ class PaymentController extends \app\base\Controller {
                 $this->user->applyInvoice($invoice);
 
                 $now = new \yii\db\Expression('NOW()');
-
-                $transactionBatch = [];
-                $historyBatch = [];
                 $accrual = 0;
-                $invoiceLevel = $this->user->position->level;
-
-                $historyBatch[] = [
-                    'userId' => $this->user->id,
-                    'invoiceId' => $invoice->id,
-                    'type' => 'order',
-                    'status' => 'payed',
-                    'amount' => $invoice->amount,
-                    'created' => $now,
-                    'updated' => $now
+                $historyBatch = [
+                    [
+                        'userId' => $this->user->id,
+                        'invoiceId' => $invoice->id,
+                        'type' => 'order',
+                        'status' => 'payed',
+                        'amount' => $invoice->amount,
+                        'created' => $now,
+                        'updated' => $now
+                    ]
                 ];
 
+                if ($invoice->userStatus == UserStatus::STATUS_DIAMOND) {
+                    $transactionBatch = [];
 
-                if ($this->user->invite->parentId != 1 && $this->user->invite->parentUser->status->isActive) {
-                    $transactionBatch[] = [
-                        'invoiceId' => $invoice->id,
-                        'receiverId' => $this->user->invite->parentUser->id,
-                        'amount' => $invoice->amount * 0.05,
-                        'status' => 'created',
-                        'created' => $now,
-                        'updated' => $now
-                    ];
+                    if ($this->user->invite->parentId != 1 && $this->user->invite->parentUser->status->isActive) {
+                        $transactionBatch[] = [
+                            'invoiceId' => $invoice->id,
+                            'receiverId' => $this->user->invite->parentUser->id,
+                            'amount' => UserPayment::ACCRUAL_INVITE,
+                            'status' => 'created',
+                            'created' => $now,
+                            'updated' => $now
+                        ];
 
-                    $historyBatch[] = [
-                        'userId' => $this->user->invite->parentUser->id,
-                        'invoiceId' => $invoice->id,
-                        'type' => 'invite',
-                        'status' => 'waiting',
-                        'amount' => $invoice->amount * 0.05,
-                        'created' => $now,
-                        'updated' => $now
-                    ];
+                        $historyBatch[] = [
+                            'userId' => $this->user->invite->parentUser->id,
+                            'invoiceId' => $invoice->id,
+                            'type' => 'invite',
+                            'status' => 'waiting',
+                            'amount' => UserPayment::ACCRUAL_INVITE,
+                            'created' => $now,
+                            'updated' => $now
+                        ];
 
-                    $accrual += $invoice->amount * 0.05;
-                }
-
-                if ($parents = $this->user->position->getParents()->with(['user.payment', 'user.status'])->all()) {
-                    $pay = 0;
-
-                    switch ($invoice->userStatus) {
-                        case 'RUBY' : $pay = 0.4; break;
-                        case 'EMERALD' : $pay = 0.7; break;
-                        case 'SAPPHIRE' : $pay = 1.2; break;
-                        case 'DIAMOND' : $pay = 3; break;
+                        $accrual += UserPayment::ACCRUAL_INVITE;
                     }
 
-                    foreach ($parents as $parent) {
-                        if ($parent->userId == 1) {
-                            break;
-                        }
+                    if ($parents = $this->user->position->getParents()->with(['user.payment', 'user.status'])->all()) {
+                        $pay = UserPayment::ACCRUAL_TREE;
+                        $invoiceLevel = $this->user->position->level;
 
-                        if (!$parent->user->status->isActive) {
-                            $invoiceLevel--;
-                            continue;
-                        }
+                        foreach ($parents as $parent) {
+                            if ($parent->userId == 1) {
+                                break;
+                            }
 
-                        $maxLevel = 0;
-                        switch ($parent->user->status->status) {
-                            case 'RUBY' : $maxLevel = 5; break;
-                            case 'EMERALD' : $maxLevel = 10; break;
-                            case 'SAPPHIRE' : $maxLevel = 15; break;
-                            case 'DIAMOND' : $maxLevel = 21; break;
-                        }
+                            if (!$parent->user->status->isActive) {
+                                $invoiceLevel--; // Pass inactive
+                                continue;
+                            }
 
-                        if (($invoiceLevel - $parent->level) > $maxLevel ) {
-                            $invoiceLevel--;
-                            continue;
-                        }
+                            // check tree-accrual level by status
+                            /*
+                            $maxLevel = 0;
+                            switch ($parent->user->status->status) {
+                                case UserStatus::STATUS_RUBY : $maxLevel = 5; break;
+                                case 'EMERALD' : $maxLevel = 10; break;
+                                case 'SAPPHIRE' : $maxLevel = 15; break;
+                                case 'DIAMOND' : $maxLevel = 21; break;
+                            }
 
-                        if ($this->user->invite->parentUser->id == $parent->userId) {
-                            $transactionBatch[0]['amount'] += $pay;
-                            $historyBatch[1]['amount'] += $pay;
-                            $historyBatch[1]['type'] = 'tree_invite';
-                        } else {
+                            if (($invoiceLevel - $parent->level) > $maxLevel ) {
+                                $invoiceLevel--;
+                                continue;
+                            }
+                            */
+
                             $transactionBatch[] = [
                                 'invoiceId' => $invoice->id,
                                 'receiverId' => $parent->userId,
@@ -192,17 +176,17 @@ class PaymentController extends \app\base\Controller {
                                 'created' => $now,
                                 'updated' => $now
                             ];
+
+                            $accrual += $pay;
                         }
-
-                        $accrual += $pay;
                     }
-                }
 
-                \Yii::$app->db->createCommand()->batchInsert(
-                    'transaction',
-                    ['invoiceId', 'receiverId', 'amount', 'status', 'created', 'updated'],
-                    $transactionBatch
-                )->execute();
+                    \Yii::$app->db->createCommand()->batchInsert(
+                        'transaction',
+                        ['invoiceId', 'receiverId', 'amount', 'status', 'created', 'updated'],
+                        $transactionBatch
+                    )->execute();
+                }
 
                 \Yii::$app->db->createCommand()->batchInsert(
                     'payment_history',

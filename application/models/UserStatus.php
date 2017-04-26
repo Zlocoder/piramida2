@@ -5,6 +5,11 @@ namespace app\models;
 use yii\base\Exception;
 
 class UserStatus extends \app\base\ActiveRecord {
+    const STATUS_RUBY = 'RUBY';
+    const STATUS_EMERALD = 'EMERALD';
+    const STATUS_SAPPHIRE = 'SAPPHIRE';
+    const STATUS_DIAMOND = 'DIAMOND';
+
     // ActiveRecord;
     public $timestamp = false;
 
@@ -40,6 +45,6 @@ class UserStatus extends \app\base\ActiveRecord {
 
     // Custom methods
     public function getIsActive() {
-        return $this->active > date('Y-m-d H:i:s');
+        return $this->status != self::STATUS_DIAMOND || $this->active > date('Y-m-d H:i:s');
     }
 }

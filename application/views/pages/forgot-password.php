@@ -12,14 +12,14 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Forgot password');
 
 <div class="row">
     <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.65); margin-top: 20px;">
-        <h1 class="text-center"><?= \Yii::t('app', 'Fill the form') ?></h1>
+        <h1 class="text-center">Восстановление пароля</h1>
 
         <?php $form = ActiveForm::begin() ?>
 
-        <?= $form->field($model, 'login') ?>
+        <?= $form->field($model, 'email') ?>
 
         <div class="form-group text-center">
-            <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Send') ?></button>
+            <button type="submit" class="btn btn-primary">Отправить</button>
         </div>
 
         <?php ActiveForm::end(); ?>

@@ -120,6 +120,40 @@ class Position extends \app\base\ActiveRecord {
                 throw new Exception('Can not update position');
             };
 
+            if ($this->appended == 2) {
+                $this->user->status->status = UserStatus::STATUS_EMERALD;
+
+                if (!$this->user->status->save()) {
+                    throw new Exception('Can not save status');
+                }
+
+                if ($this->parent) {
+                    $sibling = $this->parent->getChilds()->andWhere(['!=', 'id', $this->id])->one();
+                    if ($sibling && $sibling->user->status->status != UserStatus::STATUS_RUBY) {
+                        $this->parent->user->status->status = UserStatus::STATUS_SAPPHIRE;
+                        if (!$this->parent->user->status->save()) {
+                            throw new Exception('Can not save status');
+                        }
+
+                        if ($this->parent->parent) {
+                            $sibling = $this->parent->parent->getChilds()->andWhere(['!=', 'id', $this->parent->id])->one();
+                            if (
+                                $sibling &&
+                                (
+                                    $sibling->user->status->status == UserStatus::STATUS_SAPPHIRE ||
+                                    $sibling->user->status->status == UserStatus::STATUS_DIAMOND
+                                )
+                            ) {
+                                $this->parent->parent->user->status->status = UserStatus::STATUS_DIAMOND;
+                                if (!$this->parent->parent->user->status->save()) {
+                                    throw new Exception('Can not save status');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             \Yii::$app->db->createCommand("
                 UPDATE `position`
                 SET `total` = `total` + 1

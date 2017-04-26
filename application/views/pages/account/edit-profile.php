@@ -20,7 +20,7 @@ $this->params['section_class'] = 'cabinet';
         <div class="col-lg-7">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-                <h4 class="text-center">My profile</h4>
+                <h4 class="text-center">Мой профиль</h4>
                 <form method="post" class="form-horizontal" enctype="multipart/form-data">
                     <input type="hidden" name="_csrf" value="<?= \Yii::$app->request->csrfToken ?>" />
 
@@ -59,7 +59,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Photo</label>
+                        <label class="col-sm-4 control-label">Фото</label>
 
                         <div class="col-sm-8">
                             <?= \kartik\widgets\FileInput::widget([
@@ -71,7 +71,7 @@ $this->params['section_class'] = 'cabinet';
                                     'showUpload' => false,
                                     'browseClass' => 'btn btn-primary btn-block',
                                     'browseIcon' => '<i class="glyphicon glyphicon-camera"></i>',
-                                    'browseLabel' =>  'Select new photo'
+                                    'browseLabel' =>  'Выбрать фото'
                                 ],
                                 'options' => ['accept' => 'image/jpg, image/png, image/jpeg']
                             ]) ?>
@@ -79,7 +79,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Firstname</label>
+                        <label class="col-sm-4 control-label">Имя</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="text" name="EditProfile[firstname]" value="<?= $model->firstname ?>" />
                             <?php if ($model->hasErrors('firstname')) { ?>
@@ -89,7 +89,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Lastname</label>
+                        <label class="col-sm-4 control-label">Фамилия</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="text" name="EditProfile[lastname]" value="<?= $model->lastname ?>" />
                             <?php if ($model->hasErrors('lastname')) { ?>
@@ -99,7 +99,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">login</label>
+                        <label class="col-sm-4 control-label">Логин</label>
 						<div class="col-sm-8">
 							<p class="form-control-static"><?= $account->login ?></p>
 						</div>
@@ -113,14 +113,14 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Country</label>
+                        <label class="col-sm-4 control-label">Страна</label>
 						<div class="col-sm-8">
 							<p class="form-control-static"><?= $account->country ?></p>
 						</div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Perfect Money</label>
+                        <label class="col-sm-4 control-label">Кошелек Perfect Money</label>
                         <div class="col-sm-8">
 <!--                            <p class="form-control-static">--><?//= $account->payment->pmId ?><!--</p>-->
                             <input class="form-control" type="text" name="EditProfile[pmId]" value="<?=  $model->pmId ?>" />
@@ -131,7 +131,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Phone</label>
+                        <label class="col-sm-4 control-label">Телефон</label>
 						<div class="col-sm-8">
 							<input class="form-control" type="text" name="EditProfile[phone]" value="<?= $model->phone ?>" />
 							<?php if ($model->hasErrors('phone')) { ?>
@@ -151,17 +151,17 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary"><?= \Yii::t('app', 'Save') ?></button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
                 </form>
 
-        		<h4>Change password</h4>
+        		<h4 class="text-center">Изменить пароль</h4>
 
                 <form method="post" class="form-horizontal">
                     <input type="hidden" name="_csrf" value="<?= \Yii::$app->request->csrfToken ?>" />
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Old password</label>
+                        <label class="col-sm-4 control-label">Старый пароль</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="text" name="ChangePassword[oldPassword]" value="" />
                             <?php if ($model->hasErrors('oldPassword')) { ?>
@@ -171,7 +171,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">New password</label>
+                        <label class="col-sm-4 control-label">Новый пароль</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="text" name="ChangePassword[newPassword]" value="" />
                             <?php if ($model->hasErrors('newPassword')) { ?>
@@ -181,7 +181,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Confirm</label>
+                        <label class="col-sm-4 control-label">Подтверждение пароля</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="text" name="ChangePassword[confirm]" value="" />
                             <?php if ($model->hasErrors('confirm')) { ?>
@@ -191,7 +191,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
                     
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary"><?= \Yii::t('app', 'Save') ?></button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
                     </div>
                 </form>
             </div>

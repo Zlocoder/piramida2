@@ -3,6 +3,14 @@
 namespace app\models;
 
 class UserPayment extends \app\base\ActiveRecord {
+    const AMOUNT_RUBY = 12.5;
+    const AMOUNT_EMERALD = 0;
+    const AMOUNT_SAPPHIRE = 0;
+    const AMOUNT_DIAMOND = 100;
+
+    const ACCRUAL_INVITE = 20;
+    const ACCRUAL_TREE = 3;
+
     // ActiveRecord
     public $timestamp = false;
 

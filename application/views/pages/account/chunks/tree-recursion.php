@@ -27,15 +27,38 @@
         </div>
     </div>
 
-    <div class="col-sm-6 tree-left">
-        <?php if ($tree->isRelationPopulated('left')) { ?>
-            <?= $this->render('tree-recursion', ['tree' => $tree->left, 'level' => $level + 1]) ?>
-        <?php } ?>
-    </div>
+    <?php
+        $hasLeft = $tree->isRelationPopulated('left');
+        $hasRight = $tree->isRelationPopulated('right');
+    ?>
 
-    <div class="col-sm-6 tree-right">
-        <?php if ($tree->isRelationPopulated('right')) { ?>
+    <?php if ($hasLeft) { ?>
+        <div class="col-sm-12 arrow-container level-<?= $level ?>">
+            <div class="arrow-item">
+                <div class="dummy"></div>
+                <div class="arrow arrow-left"></div>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if ($hasRight) { ?>
+        <div class="col-sm-12 arrow-container level-<?= $level ?>">
+            <div class="arrow-item">
+                <div class="dummy"></div>
+                <div class="arrow arrow-right"></div>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if ($hasLeft) { ?>
+        <div class="col-sm-6 tree-left">
+            <?= $this->render('tree-recursion', ['tree' => $tree->left, 'level' => $level + 1]) ?>
+        </div>
+    <?php } ?>
+
+    <?php if ($hasRight) { ?>
+        <div class="col-sm-6 tree-right">
             <?= $this->render('tree-recursion', ['tree' => $tree->right, 'level' => $level + 1]) ?>
-        <?php } ?>
-    </div>
+        </div>
+    <?php } ?>
 </div>

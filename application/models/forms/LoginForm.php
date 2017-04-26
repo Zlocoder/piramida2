@@ -13,9 +13,23 @@ class LoginForm extends \yii\base\Model {
 
     public function rules() {
         return [
-            [['login', 'password'], 'required'],
-            [['login', 'password'], 'string', 'min' => 3, 'max' => 25],
-            [['captcha'], 'captcha']
+            [['login', 'password'], 'required', 'message' => 'Введите свой {attribute}'],
+            [['captcha'], 'required', 'message' => 'Введите код'],
+
+            [['login', 'password'], 'string', 'min' => 3, 'max' => 25,
+                'tooShort' => '{attribute} должен быть не менее 3 символов',
+                'tooLong' => '{attribute} должен быть не более 25 символов'
+            ],
+
+            [['captcha'], 'captcha', 'message' => 'Неверный код']
+        ];
+    }
+
+    public function attributeLabels() {
+        return [
+            'login' => 'Логин',
+            'password' => 'Пароль',
+            'captcha' => 'Введите код с картинки'
         ];
     }
 
