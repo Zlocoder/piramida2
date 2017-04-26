@@ -30,6 +30,18 @@ class Position extends \app\base\ActiveRecord {
         return $this->find()->where(['id' => $this->id >> 1]);
     }
 
+    public function getParents() {
+        $position = $this->id;
+
+        $parents = [];
+        while (($position >> 1) > 0) {
+            $position = $position >> 1;
+            $parents[] = $position;
+        }
+
+        return $this->find()->where(['id' => $parents])->orderBy(['level' => SORT_DESC]);
+    }
+
     public function getLeft() {
         return $this->find()->where(['id' => $this->id << 1]);
     }
@@ -43,6 +55,23 @@ class Position extends \app\base\ActiveRecord {
         return $this->hasOne(User::className(), ['id' => 'userId']);
     }
 
+    public function getChilds() {
+        return self::find()
+            ->where("level > {$this->level} AND (id >> (level - $this->level) = {$this->id})")
+            ->orderBy('id')
+            ->indexBy('id');
+    }
+
+    public function getChildUsers() {
+        return (new Query())
+            ->from("position as p")
+            ->leftJoin('user as u', 'u.id = p.userId')
+            ->leftJoin('user_status as us', 'us.userId = u.id')
+            ->select(['u.*', new \yii\db\Expression('IF (us.active > NOW(), us.status, NULL) as status'), 'p.id as position', new \yii\db\Expression("p.level - {$this->level} as level")])
+            ->orderBy("p.id")
+            ->where("p.level > {$this->level} AND (p.id >> (p.level - $this->level) = {$this->id})");
+    }
+
     // Custom methods
     public function getNextEmptyPosition() {
         return self::find()
@@ -51,7 +80,7 @@ class Position extends \app\base\ActiveRecord {
                 "id >> (level - {$this->level}) = {$this->id}",
                 ['<', 'appended', 2]
             ])
-            ->orderBy('level, appended, id')
+            ->orderBy('id')
             ->limit(1)
             ->one();
     }
@@ -90,6 +119,40 @@ class Position extends \app\base\ActiveRecord {
             if (!$this->save()) {
                 throw new Exception('Can not update position');
             };
+
+            if ($this->appended == 2) {
+                $this->user->status->status = UserStatus::STATUS_EMERALD;
+
+                if (!$this->user->status->save()) {
+                    throw new Exception('Can not save status');
+                }
+
+                if ($this->parent) {
+                    $sibling = $this->parent->getChilds()->andWhere(['!=', 'id', $this->id])->one();
+                    if ($sibling && $sibling->user->status->status != UserStatus::STATUS_RUBY) {
+                        $this->parent->user->status->status = UserStatus::STATUS_SAPPHIRE;
+                        if (!$this->parent->user->status->save()) {
+                            throw new Exception('Can not save status');
+                        }
+
+                        if ($this->parent->parent) {
+                            $sibling = $this->parent->parent->getChilds()->andWhere(['!=', 'id', $this->parent->id])->one();
+                            if (
+                                $sibling &&
+                                (
+                                    $sibling->user->status->status == UserStatus::STATUS_SAPPHIRE ||
+                                    $sibling->user->status->status == UserStatus::STATUS_DIAMOND
+                                )
+                            ) {
+                                $this->parent->parent->user->status->status = UserStatus::STATUS_DIAMOND;
+                                if (!$this->parent->parent->user->status->save()) {
+                                    throw new Exception('Can not save status');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             \Yii::$app->db->createCommand("
                 UPDATE `position`

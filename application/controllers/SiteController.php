@@ -3,9 +3,21 @@
 namespace app\controllers;
 
 use app\models\forms\LoginForm;
+use app\models\User;
+use app\models\forms\ForgotPassword;
+use yii\captcha\CaptchaAction;
 
 class SiteController extends \app\base\Controller
 {
+    public function actions() {
+        return [
+            'captcha' => [
+                'class' => CaptchaAction::className(),
+                'transparent' => true
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         return $this->render('/index');
@@ -38,10 +50,76 @@ class SiteController extends \app\base\Controller
         }
 
         if (!\Yii::$app->session->has('inviteId')) {
-            \Yii::$app->session->set('inviteId', $inviteId);
-            \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
+            $user = User::findOne(['login' => $inviteId]);
+            if ($user && $user->active && $user->status->isActive && $user->invite) {
+                \Yii::$app->session->set('inviteId', $user->id);
+                \Yii::$app->session->set('inviteDate', date('Y-m-d H:i:s'));
+            }
         }
 
         return $this->goRegistration();
+    }
+
+    public function actionMarketing() {
+        return $this->render('/marketing');
+    }
+
+    public function actionFaq() {
+        return $this->render('/faq');
+    }
+
+    public function actionNews() {
+        return $this->render('/news');
+    }
+
+    public function actionVideo() {
+        return $this->render('/video');
+    }
+
+    public function actionTermsAndConditions() {
+        return $this->render('/terms-and-conditions');
+    }
+
+    public function actionTestMail() {
+        $from = 'george.lemish@gmail.com';
+        $to = 'george.lemish@gmail.com';
+
+        \Yii::$app->mailer->compose('test')
+            ->setFrom($from)
+            ->setTo($to)
+            ->setSubject('test')
+            ->send();
+    }
+
+
+    public function actionForgotPassword() {
+        $forgotModel = new ForgotPassword();
+
+        if (\Yii::$app->request->isPost) {
+            $forgotModel->load(\Yii::$app->request->post());
+
+            /*
+            if (strpos($forgotModel->login, '@')) {
+                $forgotModel->email = $forgotModel->login;
+                $forgotModel->login = null;
+            }
+            */
+
+            if ($newPassword = $forgotModel->newPassword) {
+                \Yii::$app->mailer->compose('new-password', [
+                    'newPassword' => $newPassword,
+                ])->setFrom(\Yii::$app->params['mailFrom'])
+                    ->setTo($forgotModel->user->email)
+                    ->setSubject('Recover your password')
+                    ->send();
+
+                \Yii::$app->session->setFlash('message', 'Your new password send to email');
+                return $this->goHome();
+            };
+        }
+
+        return $this->render('/forgot-password', [
+            'model' => $forgotModel
+        ]);
     }
 }

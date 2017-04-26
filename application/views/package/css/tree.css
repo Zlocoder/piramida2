@@ -1,0 +1,326 @@
+.tree {
+    text-align: center;
+    position: relative;
+}
+
+.tree .tree-item {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.tree .level-0.tree-item {
+    width: 12.5%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    z-index: 4;
+}
+
+.tree .level-0.tree-item:hover {
+    width: 13.5%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.tree .level-1.tree-item {
+    width: 23%;
+    margin-top: 1%;
+    margin-bottom: 13.5%;
+    z-index: 3;
+}
+
+.tree .level-1.tree-item:hover {
+    width: 25%;
+    margin-top: 0;
+    margin-bottom: 12.5%;
+}
+
+.tree .level-2.tree-item {
+    width: 42%;
+    margin-top: 2%;
+    margin-bottom: 32%;
+    z-index: 2;
+}
+
+.tree .level-2.tree-item:hover {
+    width: 46%;
+    margin-top: 0;
+    margin-bottom: 30%;
+}
+
+.tree .level-3.tree-item {
+    width: 76%;
+    margin-top: 4%;
+    z-index: 1;
+}
+
+.tree .level-3.tree-item:hover {
+    width: 84%;
+    margin-top: 0;
+}
+
+.tree .level-4.tree-item,
+.tree .level-5.tree-item,
+.tree .level-6.tree-item,
+.tree .level-7.tree-item,
+.tree .level-8.tree-item,
+.tree .level-9.tree-item,
+.tree .level-10.tree-item {
+    width: 90%;
+    margin-top: 0;
+}
+
+.tree .level-4.tree-item:hover,
+.tree .level-5.tree-item:hover,
+.tree .level-6.tree-item:hover,
+.tree .level-7.tree-item:hover,
+.tree .level-8.tree-item:hover,
+.tree .level-9.tree-item:hover,
+.tree .level-10.tree-item:hover {
+    width: 100%;
+    margin-top: 0;
+}
+
+.admin .tree .level-3.tree-item {
+    width: 15%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+}
+
+.admin .tree .level-3.tree-item:hover {
+    width: 17%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.admin .tree .level-4.tree-item {
+    width: 30%;
+    margin-top: 1%;
+    margin-bottom: 13.5%;
+}
+
+.admin .tree .level-4.tree-item:hover {
+    width: 35%;
+    margin-top: 0;
+    margin-bottom: 12.5%;
+}
+
+.admin .tree .level-5.tree-item {
+    width: 70%;
+    margin-top: 2%;
+    margin-bottom: 32%;
+}
+
+.admin .tree .level-5.tree-item:hover {
+    width: 78%;
+    margin-top: 0;
+    margin-bottom: 30%;
+}
+
+.admin .tree .level-6.tree-item {
+    width: 100%;
+    margin-top: 4%;
+}
+
+.admin .tree .level-6.tree-item:hover {
+    width: 100%;
+    margin-top: 0;
+}
+
+.admin .tree .level-8.tree-item,
+.admin .tree .level-9.tree-item,
+.admin .tree .level-10.tree-item {
+    width: 100%;
+    margin-top: 0;
+}
+
+.admin .tree .level-8.tree-item:hover,
+.admin .tree .level-9.tree-item:hover,
+.admin .tree .level-10.tree-item:hover {
+    width: 100%;
+    margin-top: 0;
+}
+
+
+.tree .tree-item .circle1 {
+    position: relative;
+    padding-top: 100%;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: -0.2vw 0.2vw 2vw rgba(0,0,0,0.5)
+}
+
+.tree .tree-item .circle2 {
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: -0.06vw 0.06vw 0.4vw rgba(0,0,0,0.7)
+}
+
+.tree .tree-item .circle3 {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background-color: #acadb8;
+    background-image: url('../images/man.png');
+    background-size: 35%;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0.2vw rgba(0,0,0,0.5)
+}
+
+.tree .tree-item.RUBY .circle3 {
+    background-color: #d50050;
+}
+
+.tree .tree-item.EMERALD .circle3 {
+    background-color: #51b265;
+}
+
+.tree .tree-item.SAPPHIRE .circle3 {
+    background-color: #3c4997;
+}
+
+.tree .tree-item.DIAMOND .circle3 {
+    background-color: #e0d32f;
+}
+
+.tree .tree-item .circle3 img {
+    display: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0.2vw rgba(0,0,0,0.5)
+}
+
+.tree .tree-item:hover .circle3 img {
+    display: block;
+}
+
+.tree .tree-item .description {
+    display: none;
+    position: absolute;
+    top: 100%;
+    z-index: 100;
+    background-color: #fff;
+    width: 12vw;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
+    text-align: center;
+    font-size: 0.9vw;
+}
+
+.tree .level-0 .description {
+    left: -30%;
+}
+
+.tree .level-1 .description {
+    left: -50%;
+}
+
+.tree .level-2 .description {
+    left: -65%;
+}
+
+.tree .level-3 .description {
+    left: -110%;
+}
+
+.tree .tree-item:hover .description {
+    display: block;
+}
+
+.tree .tree-item .description p {
+    margin-bottom: 0.1vw;
+}
+
+.tree .tree-item .description p:last-child {
+    padding-top: 0.5vw;
+}
+
+.tree .tree-item:after {
+    content: '';
+}
+
+.tree .arrow-container {
+    position: absolute;
+    width: 100%;
+    z-index: 0;
+}
+
+.tree .arrow-item {
+    display: inline-block;
+    position: relative;
+}
+
+.tree .level-0 .arrow-item {
+    width: 12.5%;
+}
+
+.tree .level-1 .arrow-item {
+    width: 23%;
+}
+
+.tree .level-2 .arrow-item {
+    width: 42%;
+}
+
+.tree .arrow-item .dummy {
+    padding-top: 100%;
+}
+
+.tree .arrow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/tree_arrow.svg');
+    background-size: 100% 100%;
+    transform-origin: 50% -50%;
+}
+
+.tree .level-0 .arrow {
+    height: 140%;
+    transform-origin: 50% -35%;
+}
+
+.tree .level-0 .arrow-left {
+    transform: rotate(65deg);
+}
+
+.tree .level-0 .arrow-right {
+    transform: rotate(-65deg);
+}
+
+.tree .level-1 .arrow {
+    height: 105%;
+    transform-origin: 50% -47%;
+}
+
+.tree .level-1 .arrow-left {
+    transform: rotate(38deg);
+}
+
+.tree .level-1 .arrow-right {
+    transform: rotate(-38deg);
+}
+
+.tree .level-2 .arrow {
+    height: 100%;
+    transform-origin: 50% -50%;
+}
+
+.tree .level-2 .arrow-left {
+    transform: rotate(20deg);
+}
+
+.tree .level-2 .arrow-right {
+    transform: rotate(-20deg);
+}

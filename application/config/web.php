@@ -11,4 +11,5 @@ return [
     'components' => require(__DIR__ . '/web_components.php'),
     'modules' => require(__DIR__ . '/web_modules.php'),
     'bootstrap' => ['debug'],
+    'params' => require(__DIR__ . '/params.php')
 ];

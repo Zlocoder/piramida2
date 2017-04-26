@@ -36,12 +36,14 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public function rules() {
         return [
-            [['firstname', 'lastname', 'login', 'password', 'email'], 'required'],
+            [['firstname', 'lastname', 'login', 'password', 'email', 'country'], 'required'],
 
-            [['firstname', 'lastname', 'login'], 'string', 'min' => 3, 'max' => 25],
+            [['firstname', 'lastname', 'login', 'skype'], 'string', 'min' => 3, 'max' => 25],
+            [['login', 'skype'], 'match', 'pattern' => '/^[^ ]{3,25}$/'],
             [['password'], 'string', 'min' => 60, 'max' => 60],
             [['email'], 'string', 'max' => 100],
-
+            [['country'], 'string', 'max' => 100],
+            [['phoneDigits', 'phone'], 'string', 'min' => 5, 'max' => 25],
             [['email'], 'email'],
 
             [['login', 'email'], 'unique'],
@@ -60,13 +62,47 @@ class User extends ActiveRecord implements IdentityInterface {
         return $this->hasOne(Position::className(), ['userId' => 'id']);
     }
 
+    // Invoice Relation
+    public function getInvoices() {
+        return $this->hasMany(Invoice::className(), ['userId' => 'id'])
+            ->where([
+                'or',
+                ['invoiceStatus' => 'payed'],
+                ['invoiceStatus' => 'complete']
+            ])
+            ->orderBy(['created' => SORT_DESC]);
+    }
+
+    // Status relation
+    public function getStatus() {
+        return $this->hasOne(UserStatus::className(), ['userId' => 'id']);
+    }
+
+    // Payment relation
+    public function getPayment() {
+        return $this->hasOne(UserPayment::className(), ['userId' => 'id']);
+    }
+
+    // Activation relation
+    public function getActivation() {
+        return $this->hasOne(UserActivation::className(), ['userId' => 'id']);
+    }
+
     // Custom fields
     public function getFullname() {
         if ($this->firstname == $this->lastname) {
             return $this->firstname;
         }
 
-        return $this->firtsname . ' ' . $this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function getName() {
+        if ($this->firstname) {
+            return $this->getFullname();
+        }
+
+        return $this->login;
     }
 
     // Photo
@@ -112,5 +148,46 @@ class User extends ActiveRecord implements IdentityInterface {
         }
 
         return \Yii::getAlias("@web/images/photo/default$sizePart.png");
+    }
+
+    public function getHasPhoto() {
+        $dirname = \Yii::getAlias('@webroot/images/photo');
+        return file_exists("$dirname/{$this->id}.png");
+    }
+
+    // Custom methods
+    public function applyInvoice($invoice) {
+        if ($invoice->userId != $this->id) {
+            return false;
+        }
+
+        if ($this->status) {
+            $this->status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+        } else {
+            $status = new UserStatus([
+                'userId' => $this->_user->id,
+                'status' => UserStatus::STATUS_RUBY,
+                'active' => new \yii\db\Expression('NOW()')
+            ]);
+
+            if (!$status->save()) {
+                throw new Exception('Can not save UserStatus');
+            }
+
+            $this->populateRelation('status', $status);
+
+            $parentInvite = $this->invite->parent;
+            $parentInvite->count += 1;
+            if (!$parentInvite->save()) {
+                throw new Exception('Can not update parent invite');
+            };
+
+            $this->populateRelation('position', $parentInvite->user->position->append($this->id));
+        }
+
+        $this->payment->payed += $invoice->amount;
+        if (!$this->payment->save()) {
+            throw new Exception('Can not update payment');
+        }
     }
 }

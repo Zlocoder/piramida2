@@ -7,14 +7,16 @@
 
 use kartik\widgets\ActiveForm;
 use kartik\widgets\FileInput;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 ?>
 
 <div class="row">
-    <h1 class="text-center"><?= \Yii::t('app', 'Registration') ?></h1>
+    <div class="col-lg-4 col-lg-offset-4" style="background-color: rgba(255, 255, 255, 0.65); margin-top: 20px;">
+        <h1 class="text-center">Регистрация</h1>
 
-    <div class="col-lg-4 col-lg-offset-4">
         <?php $form = ActiveForm::begin([
             'options' => [
                 'enctype' => 'multipart/form-data'
@@ -28,10 +30,18 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
                 'showUpload' => false,
                 'browseClass' => 'btn btn-primary btn-block',
                 'browseIcon' => '<i class="glyphicon glyphicon-camera"></i>',
-                'browseLabel' =>  'Select Photo'
+                'browseLabel' =>  'Выбрать фото'
             ],
             'options' => ['accept' => 'image/jpg, image/png, image/jpeg']
         ]) ?>
+
+        <?php /* if ($registrationForm->inviteId && $registrationForm->parentInvite->userId == $registrationForm->inviteId) { */ ?>
+        <?php if (!$registrationForm->isParentAdmin) { ?>
+            <div class="form-group sponsor">
+                <label class="control-label">Спонсор</label>
+                <p class="form-control-static"><?= $registrationForm->parentInvite->user->login ?></p>
+            </div>
+        <?php } ?>
 
         <?= $form->field($registrationForm, 'firstname', ['inputOptions' => ['autofocus' => true]]) ?>
 
@@ -41,23 +51,54 @@ $this->title = Yii::$app->name . ' - ' . Yii::t('app', 'Registration');
 
         <?= $form->field($registrationForm, 'email') ?>
 
+        <?= $form->field($registrationForm, 'country')->dropDownList(require Yii::getAlias('@app/base/countries.php'), [
+            'prompt' => 'Выберите страну...'
+        ]) ?>
+
+        <?= $form->field($registrationForm, 'phone') ?>
+
+        <?= $form->field($registrationForm, 'skype') ?>
+
+        <?= $form->field($registrationForm, 'pmId') ?>
+
         <?= $form->field($registrationForm, 'password')->passwordInput() ?>
 
         <?= $form->field($registrationForm, 'confirm')->passwordInput() ?>
 
+        <?= $form->field($registrationForm, 'captcha')->widget(\yii\captcha\Captcha::className(), [
+            'options' => [
+                'class' => 'form-control',
+            ],
+            'template' => '<div class="row"><div class="col-sm-8">{input}</div> <div class="col-sm-4" style="margin-top: -8px;">{image}</div></div>'
+        ]) ?>
+
+        <?= $form->field($registrationForm, 'agree')
+            ->checkbox([
+                'label' => '<b>Я согласен с ' . Html::a(
+                    'условиями и соглашениями',
+                    Url::to(['site/terms-and-conditions']),
+                    ['target' => '_blank', 'style' => 'color: #337ab7;']
+                ) . '</b>'
+            ])
+        ?>
+
         <div class="form-group text-center">
-            <?php if ($registrationForm->isParentAdmin) { ?>
-                <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Register') ?></button>
-            <?php } else { ?>
-                <button type="submit"  class="btn btn-primary">
-                    <?= Yii::t('app', 'Register by invite ({fullname})', [
-                            'fullname' => $registrationForm->parentInvite->user->fullname
-                    ]) ?>
-                </button>
-            <?php } ?>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
         </div>
 
         <?php ActiveForm::end(); ?>
     </div>
 </div>
+
+<?php if (\Yii::$app->session->hasFlash('isPost')) { ?>
+    <script>console.log('post request')</script>
+    <?php \Yii::$app->session->removeFlash('isPost') ?>
+<?php } ?>
+
+<?php if (\Yii::$app->session->hasFlash('error')) { ?>
+    <script>console.log('Error: <?= \Yii::$app->session->getFlash('error') ?>')</script>
+    <?php \Yii::$app->session->removeFlash('error') ?>
+<?php } ?>
+
+
 
