@@ -11,19 +11,26 @@ class AdminUsersController extends \app\base\AdminController {
     public function actionIndex() {
         if (\Yii::$app->request->isPost) {
             if ($userId = \Yii::$app->request->post('activity')) {
-                if ($status = UserStatus::findOne($userId)) {
-                    if ($status->isActive) {
-                        $status->active = new \yii\db\Expression('DATE_SUB(NOW(), INTERVAL 1 HOUR)');
-                    } else {
-                        $status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
-
-                        if (!Position::findOne(['userId' => $userId])) {
-                            $user = User::findOne($userId);
-                            $user->invite->parentUser->position->append($userId);
+                if ($user = User::findOne($userId)) {
+                    if ($user->status) {
+                        if ($user->status->isActive) {
+                            $user->status->active = new \yii\db\Expression('DATE_SUB(NOW(), INTERVAL 1 HOUR)');
+                        } else {
+                            $user->status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
                         }
-                    }
+                    } else {
+                        $status = new UserStatus([
+                            'userId' => $userId,
+                            'status' => UserStatus::STATUS_RUBY,
+                            'active' => new \yii\db\Expression('NOW()')
+                        ]);
 
-                    $status->save();
+                        $status->save();
+
+                        $user->invite->parent->user->position->append($user->id);
+                        $user->invite->parent->count += 1;
+                        $user->invite->parent->save();
+                    }
                 }
             }
         }

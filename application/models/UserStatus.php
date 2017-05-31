@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Exception;
 
 class UserStatus extends \app\base\ActiveRecord {
+    const STATUS_TEST = 'TEST';
     const STATUS_RUBY = 'RUBY';
     const STATUS_EMERALD = 'EMERALD';
     const STATUS_SAPPHIRE = 'SAPPHIRE';

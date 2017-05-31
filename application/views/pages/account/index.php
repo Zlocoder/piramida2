@@ -44,9 +44,7 @@ $this->params['section_class'] = 'cabinet';
                     </div>
                     <div class="status">
                         <a href="#"><img src="/images/bril.png" alt=""></a>
-<!--                        <div class="payStatus"><a href="/account/order">оплатить статус</a></div>-->
-<!--                    </div>-->
-                        <div class="payStatus"><a href="#">оплатить статус</a></div>
+                        <div class="payStatus"><a href="/account/order">оплатить статус</a></div>
                     </div>
                 </div>
 

@@ -145,6 +145,7 @@ class Position extends \app\base\ActiveRecord {
                                 )
                             ) {
                                 $this->parent->parent->user->status->status = UserStatus::STATUS_DIAMOND;
+                                $this->parent->parent->user->status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
                                 if (!$this->parent->parent->user->status->save()) {
                                     throw new Exception('Can not save status');
                                 }

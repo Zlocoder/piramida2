@@ -163,9 +163,12 @@ class User extends ActiveRecord implements IdentityInterface {
 
         if ($this->status) {
             $this->status->active = new \yii\db\Expression('DATE_ADD(NOW(), INTERVAL 1 MONTH)');
+            if (!$this->status->save()) {
+                throw new Exception('Can not save UserStatus');
+            }
         } else {
             $status = new UserStatus([
-                'userId' => $this->_user->id,
+                'userId' => $this->id,
                 'status' => UserStatus::STATUS_RUBY,
                 'active' => new \yii\db\Expression('NOW()')
             ]);

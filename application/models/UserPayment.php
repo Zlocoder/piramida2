@@ -3,6 +3,7 @@
 namespace app\models;
 
 class UserPayment extends \app\base\ActiveRecord {
+    const AMOUNT_TEST = 0.01;
     const AMOUNT_RUBY = 12.5;
     const AMOUNT_EMERALD = 0;
     const AMOUNT_SAPPHIRE = 0;

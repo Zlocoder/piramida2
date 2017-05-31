@@ -4,7 +4,7 @@
             <div style="text-align: center;margin-bottom: 2vw;"><img src="<?= $account->getPhotoUrl([100, 100]) ?>" /></div>
 
             <p><b>Логин:</b> <?= $account->login ?></p>
-            <?php if ($account->status->isActive) { ?>
+            <?php if ($account->status && $account->status->isActive) { ?>
                 <p><b>Статус:</b> <?= $account->status->status ?></p>
                 <p>
                     <b>Реф ссылка:</b>
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <?php if ($account->status->isActive) { ?>
+    <?php if ($account->status && $account->status->isActive) { ?>
         <ul>
             <li>
                 <a href="/account/">
@@ -54,14 +54,12 @@
                 </a>
             </li>
 
-            <?php if ($account->position) { ?>
-                <li>
-                    <a href="/account/tree/">
-                        <div class="sq"><div class="sq2"></div></div>
-                        <div class="r">Матрица</div>
-                    </a>
-                </li>
-            <?php } ?>
+            <li>
+                <a href="/account/tree/">
+                    <div class="sq"><div class="sq2"></div></div>
+                    <div class="r">Матрица</div>
+                </a>
+            </li>
 
             <li>
                 <a href="/account/invited-users/">

@@ -53,7 +53,6 @@ class UsersFilter extends \yii\base\Model {
                     'user_status.active < NOW()'
                 ]
             ]);
-            $query->andWhere('user_status.active < NOW()');
         } else {
             $query->andWhere([
                 'or',
