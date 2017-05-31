@@ -173,6 +173,19 @@ class AccountController extends \app\base\Controller {
         return $this->redirect(['payment/index']);
     }
 
+    public function actionOrderTest() {
+        if (!$this->user->active) {
+            return $this->goAccount();
+        }
+
+        \Yii::$app->session->setFlash('orderStatus', UserStatus::STATUS_TEST);
+        \Yii::$app->session->setFlash('orderAmount', UserPayment::AMOUNT_TEST);
+
+        \Yii::$app->session->setFlash('orderUserId', $this->user->id);
+
+        return $this->redirect(['payment/index']);
+    }
+
     public function actionPaymentHistory() {
         return $this->render('payment-history', [
             'account' => $this->account,
